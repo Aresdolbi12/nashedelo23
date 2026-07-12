@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Наше дело — каталог вариантов лендинга</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Unbounded:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue-deep: #0f2847;
+      --blue-mid: #1e4976;
+      --blue-sky: #a8c8dc;
+      --concrete: #e4e4e0;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #1a202c;
+      background: linear-gradient(180deg, #b5d2e3 0%, #e8f0f6 30%, #f7f9fb 100%);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; }
+    header { margin-bottom: 40px; }
+    .kicker {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+      font-weight: 600; color: var(--blue-mid); margin-bottom: 16px;
+    }
+    .kicker::before { content: ""; width: 48px; height: 1px; background: var(--blue-mid); }
+    h1 {
+      font-family: 'Unbounded', sans-serif; font-weight: 900;
+      font-size: clamp(1.8rem, 4.5vw, 3rem); color: var(--blue-deep); line-height: 1.05;
+    }
+    .sub { margin-top: 12px; color: #3a4a5f; max-width: 640px; line-height: 1.6; }
+
+    .grid {
+      display: grid; gap: 28px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+    .card {
+      background: #fff; border: 1px solid rgba(15,40,71,0.1); border-radius: 4px;
+      overflow: hidden; position: relative;
+      transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -15px rgba(15,40,71,0.25);
+    }
+    .preview {
+      position: relative; aspect-ratio: 16 / 10; overflow: hidden;
+      background: var(--concrete); display: block;
+    }
+    .preview iframe {
+      width: 1280px; height: 800px; border: 0;
+      transform-origin: 0 0; pointer-events: none;
+      position: absolute; top: 0; left: 0;
+    }
+    .preview .open-overlay {
+      position: absolute; inset: 0; z-index: 2;
+      display: flex; align-items: flex-end; justify-content: flex-end;
+      padding: 12px; text-decoration: none;
+      background: linear-gradient(180deg, transparent 70%, rgba(15,40,71,0.15));
+      opacity: 0; transition: opacity .3s;
+    }
+    .card:hover .open-overlay { opacity: 1; }
+    .open-overlay span {
+      background: var(--blue-deep); color: #fff; font-size: 12px; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase; padding: 8px 14px; border-radius: 2px;
+    }
+    .meta { padding: 18px 20px 20px; }
+    .meta-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .title-link {
+      font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 17px;
+      color: var(--blue-deep); text-decoration: none;
+    }
+    .title-link:hover { text-decoration: underline; }
+    .info-btn {
+      width: 30px; height: 30px; flex-shrink: 0; border: 0; cursor: pointer;
+      border-radius: 2px; color: #fff; font-weight: 700; font-size: 15px;
+      background: linear-gradient(135deg, #5a6778, #8a95a5 55%, #4a5568);
+      transition: transform .2s;
+    }
+    .info-btn:hover { transform: translateY(-2px); }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tag {
+      font-size: 11px; font-weight: 600; letter-spacing: .04em;
+      background: rgba(30,73,118,0.08); color: var(--blue-mid);
+      padding: 4px 8px; border-radius: 2px;
+    }
+    .date { margin-top: 12px; font-size: 12px; color: #77808c; }
+
+    /* Модалка «информация о варианте» */
+    dialog {
+      border: 0; border-radius: 4px; padding: 0; max-width: 560px; width: calc(100% - 40px);
+      box-shadow: 0 30px 60px -20px rgba(15,40,71,0.4);
+    }
+    dialog::backdrop { background: rgba(15,40,71,0.45); backdrop-filter: blur(3px); }
+    .dlg-head {
+      background: var(--blue-deep); color: #fff; padding: 18px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .dlg-head h2 { font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 700; }
+    .dlg-close {
+      background: none; border: 0; color: #a8c8dc; font-size: 22px; cursor: pointer; line-height: 1;
+    }
+    .dlg-close:hover { color: #fff; }
+    .dlg-body { padding: 22px 24px 26px; line-height: 1.65; font-size: 14.5px; color: #2a3648; }
+    .dlg-body h3 {
+      font-size: 12px; text-transform: uppercase; letter-spacing: .15em;
+      color: var(--blue-mid); margin: 18px 0 6px;
+    }
+    .dlg-body h3:first-child { margin-top: 0; }
+    .dlg-body ul { padding-left: 20px; }
+    .dlg-body li { margin: 3px 0; }
+
+    footer { margin-top: 56px; font-size: 12px; color: #77808c; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--blue-mid); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="kicker">Внутренняя страница · для выбора варианта</div>
+      <h1>«Наше дело» — варианты лендинга</h1>
+      <p class="sub">
+        Каталог макетов сайта образовательной программы. Кликните по превью или названию,
+        чтобы открыть вариант целиком. Кнопка «?» — подробности о варианте.
+      </p>
+    </header>
+
+    <div class="grid" id="grid"></div>
+
+    <footer>Каталог обновляется по мере появления новых вариантов.</footer>
+  </div>
+
+  <dialog id="dlg">
+    <div class="dlg-head">
+      <h2 id="dlg-title"></h2>
+      <button class="dlg-close" id="dlg-close" aria-label="Закрыть">×</button>
+    </div>
+    <div class="dlg-body" id="dlg-body"></div>
+  </dialog>
+
+  <script>
+    // Добавление нового варианта = новый объект в этом массиве + папка /N/ рядом.
+    const VARIANTS = [
+      {
+        n: 1,
+        title: 'Вариант 1 — «Металл и небо»',
+        date: '2026-07-12',
+        tags: ['React', 'Framer Motion', 'светлый', 'анимации'],
+        info: `
+          <h3>Концепция</h3>
+          Строгий мужественный стиль: металл и бетон как символы силы и фундамента,
+          светлое мирное небо с облаками как символ возвращения к мирной жизни.
+          Сайт светлый, тёмные только акценты.
+          <h3>Что внутри</h3>
+          <ul>
+            <li>Каскадное появление hero, дрейфующие облака с параллаксом</li>
+            <li>Анимированные счётчики (2 дня / 9 экспертов / 7 городов / 100% бесплатно)</li>
+            <li>Гигантские номера секций фоном, scroll-spy в меню, прогресс-бар чтения</li>
+            <li>3D-наклон карточек спикеров, блик «металла» на кнопках, плавный FAQ</li>
+          </ul>
+          <h3>Статус</h3>
+          <ul>
+            <li>Спикеры — заглушки (ждём состав)</li>
+            <li>Кнопка регистрации ведёт на заглушку Яндекс-формы</li>
+            <li>Контакты в футере условные</li>
+          </ul>
+          <h3>Технически</h3>
+          React 18 + Tailwind 4 + Framer Motion, статическая сборка ~98 КБ gzip,
+          адаптив, поддержка prefers-reduced-motion.`,
+      },
+    ];
+
+    const grid = document.getElementById('grid');
+    const dlg = document.getElementById('dlg');
+
+    for (const v of VARIANTS) {
+      const url = `./${v.n}/`;
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="preview">
+          <iframe src="${url}" loading="lazy" tabindex="-1" title="Превью: ${v.title}"></iframe>
+          <a class="open-overlay" href="${url}"><span>Открыть вариант →</span></a>
+        </div>
+        <div class="meta">
+          <div class="meta-top">
+            <a class="title-link" href="${url}">${v.title}</a>
+            <button class="info-btn" aria-label="Информация о варианте ${v.n}">?</button>
+          </div>
+          <div class="tags">${v.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+          <div class="date">Добавлен: ${v.date} · ссылка: <code>/${v.n}/</code></div>
+        </div>`;
+      card.querySelector('.info-btn').addEventListener('click', () => {
+        document.getElementById('dlg-title').textContent = v.title;
+        document.getElementById('dlg-body').innerHTML = v.info;
+        dlg.showModal();
+      });
+      grid.appendChild(card);
+    }
+
+    document.getElementById('dlg-close').addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+
+    // Масштабируем iframe-превью под ширину карточки (рендерится как десктоп 1280px)
+    function scalePreviews() {
+      document.querySelectorAll('.preview').forEach((p) => {
+        const iframe = p.querySelector('iframe');
+        iframe.style.transform = `scale(${p.clientWidth / 1280})`;
+      });
+    }
+    scalePreviews();
+    addEventListener('resize', scalePreviews);
+  </script>
+</body>
+</html>
