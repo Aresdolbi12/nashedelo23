@@ -1,0 +1,136 @@
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+
+const EASE = [0.19, 1, 0.22, 1]
+
+const SECTIONS = [
+  { id: 'about', label: 'О проекте' },
+  { id: 'program', label: 'Программа' },
+  { id: 'schedule', label: 'География' },
+  { id: 'speakers', label: 'Спикеры' },
+  { id: 'faq', label: 'Вопросы' },
+]
+
+export default function Nav3() {
+  const [active, setActive] = useState(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: '-40% 0px -55% 0px' },
+    )
+    SECTIONS.forEach(({ id }) => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <>
+      <motion.nav
+        className="fixed top-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-4xl"
+        initial={{ y: -70, x: '-50%', opacity: 0 }}
+        animate={{ y: 0, x: '-50%', opacity: 1 }}
+        transition={{ duration: 0.9, ease: EASE, delay: 0.4 }}
+      >
+        <div className="glass-nav flex items-center justify-between pl-5 pr-2 py-2">
+          <a href="#top" className="flex items-center gap-2.5 text-white">
+            <span className="w-8 h-8 rounded-full bg-gradient-to-br from-[#a8c8dc] to-[#5b87ad] flex items-center justify-center font-black text-[#0f2847]">
+              Н
+            </span>
+            <span className="font-extrabold tracking-tight hidden sm:inline">Наше дело</span>
+          </a>
+
+          <div className="hidden lg:flex items-center gap-1">
+            {SECTIONS.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={`relative px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                  active === id ? 'text-[#0f2847]' : 'text-white/85 hover:text-white'
+                }`}
+              >
+                {active === id && (
+                  <motion.span
+                    layoutId="nav3-pill"
+                    className="absolute inset-0 bg-white rounded-full"
+                    transition={{ duration: 0.45, ease: EASE }}
+                  />
+                )}
+                <span className="relative z-10">{label}</span>
+              </a>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <a
+              href="#register"
+              className="hidden md:inline-flex btn-light px-5 py-2.5 text-sm font-bold"
+            >
+              Регистрация
+            </a>
+            <button
+              className="lg:hidden w-10 h-10 flex items-center justify-center text-white"
+              aria-label="Открыть меню"
+              onClick={() => setMenuOpen(true)}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="3" y1="7" x2="21" y2="7" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="17" x2="21" y2="17" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </motion.nav>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="fixed inset-0 z-[60] bg-[#0c1e35]/96 backdrop-blur-md flex flex-col items-center justify-center gap-7"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            <button
+              className="absolute top-6 right-6 w-11 h-11 flex items-center justify-center text-white"
+              aria-label="Закрыть меню"
+              onClick={() => setMenuOpen(false)}
+            >
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            {SECTIONS.map(({ id, label }, i) => (
+              <motion.a
+                key={id}
+                href={`#${id}`}
+                className="text-2xl font-bold text-white"
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.08 + i * 0.06, duration: 0.45, ease: EASE }}
+                onClick={() => setMenuOpen(false)}
+              >
+                {label}
+              </motion.a>
+            ))}
+            <motion.a
+              href="#register"
+              className="btn-light px-8 py-4 font-bold mt-4"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45, duration: 0.45, ease: EASE }}
+              onClick={() => setMenuOpen(false)}
+            >
+              Регистрация
+            </motion.a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}

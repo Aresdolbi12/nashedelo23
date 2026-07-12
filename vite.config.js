@@ -14,6 +14,7 @@ export default defineConfig({
         catalog: resolve(__dirname, 'index.html'),
         v1: resolve(__dirname, '1/index.html'),
         v2: resolve(__dirname, '2/index.html'),
+        v3: resolve(__dirname, '3/index.html'),
       },
     },
   },
