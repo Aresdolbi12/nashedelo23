@@ -79,12 +79,16 @@
     }
     .title-link:hover { text-decoration: underline; }
     .info-btn {
-      width: 30px; height: 30px; flex-shrink: 0; border: 0; cursor: pointer;
-      border-radius: 2px; color: #fff; font-weight: 700; font-size: 15px;
+      width: 32px; height: 32px; flex-shrink: 0; border: 0; cursor: pointer;
+      color: #fff; font-weight: 700; font-size: 15px; line-height: 1;
       background: linear-gradient(135deg, #5a6778, #8a95a5 55%, #4a5568);
-      transition: transform .2s;
+      clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+      transition: transform .35s cubic-bezier(.2,.8,.2,1), background .3s;
     }
     .info-btn:hover { transform: translateY(-2px); }
+    .card.open .info-btn {
+      background: linear-gradient(135deg, var(--blue-mid), var(--blue-deep));
+    }
     .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .tag {
       font-size: 11px; font-weight: 600; letter-spacing: .04em;
@@ -93,29 +97,51 @@
     }
     .date { margin-top: 12px; font-size: 12px; color: #77808c; }
 
-    /* Модалка «информация о варианте» */
-    dialog {
-      border: 0; border-radius: 4px; padding: 0; max-width: 560px; width: calc(100% - 40px);
-      box-shadow: 0 30px 60px -20px rgba(15,40,71,0.4);
+    /* Раскрывающийся блок «информация о варианте» */
+    .info-wrap {
+      height: 0;
+      overflow: hidden;
+      transition: height .55s cubic-bezier(.2,.8,.2,1);
     }
-    dialog::backdrop { background: rgba(15,40,71,0.45); backdrop-filter: blur(3px); }
-    .dlg-head {
-      background: var(--blue-deep); color: #fff; padding: 18px 24px;
-      display: flex; justify-content: space-between; align-items: center;
+    .info-body {
+      margin: 6px 20px 20px;
+      border: 1px solid rgba(15,40,71,0.12);
+      border-top: 3px solid transparent;
+      border-image: linear-gradient(90deg, var(--blue-mid), #8a95a5, var(--blue-sky)) 1;
+      background:
+        linear-gradient(rgba(30,73,118,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,73,118,0.035) 1px, transparent 1px),
+        #fafcfe;
+      background-size: 18px 18px;
+      padding: 18px 20px 20px;
+      line-height: 1.6; font-size: 14px; color: #2a3648;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity .4s ease .12s, transform .45s cubic-bezier(.2,.8,.2,1) .12s;
     }
-    .dlg-head h2 { font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 700; }
-    .dlg-close {
-      background: none; border: 0; color: #a8c8dc; font-size: 22px; cursor: pointer; line-height: 1;
+    .card.open .info-body { opacity: 1; transform: translateY(0); }
+    .info-body h3 {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; text-transform: uppercase; letter-spacing: .18em;
+      color: var(--blue-mid); margin: 16px 0 7px; font-weight: 700;
     }
-    .dlg-close:hover { color: #fff; }
-    .dlg-body { padding: 22px 24px 26px; line-height: 1.65; font-size: 14.5px; color: #2a3648; }
-    .dlg-body h3 {
-      font-size: 12px; text-transform: uppercase; letter-spacing: .15em;
-      color: var(--blue-mid); margin: 18px 0 6px;
+    .info-body h3::after {
+      content: ""; flex: 1; height: 1px;
+      background: linear-gradient(90deg, rgba(30,73,118,0.25), transparent);
     }
-    .dlg-body h3:first-child { margin-top: 0; }
-    .dlg-body ul { padding-left: 20px; }
-    .dlg-body li { margin: 3px 0; }
+    .info-body h3:first-child { margin-top: 0; }
+    .info-body ul { list-style: none; padding: 0; }
+    .info-body li {
+      margin: 4px 0; padding-left: 18px; position: relative;
+    }
+    .info-body li::before {
+      content: ""; position: absolute; left: 2px; top: 8px;
+      width: 6px; height: 6px; transform: rotate(45deg);
+      background: var(--blue-sky); outline: 1px solid var(--blue-mid);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .info-wrap, .info-body, .info-btn, .card { transition: none; }
+    }
 
     footer { margin-top: 56px; font-size: 12px; color: #77808c; }
     a:focus-visible, button:focus-visible { outline: 2px solid var(--blue-mid); outline-offset: 2px; }
@@ -136,14 +162,6 @@
 
     <footer>Каталог обновляется по мере появления новых вариантов.</footer>
   </div>
-
-  <dialog id="dlg">
-    <div class="dlg-head">
-      <h2 id="dlg-title"></h2>
-      <button class="dlg-close" id="dlg-close" aria-label="Закрыть">×</button>
-    </div>
-    <div class="dlg-body" id="dlg-body"></div>
-  </dialog>
 
   <script>
     // Добавление нового варианта = новый объект в этом массиве + папка /N/ рядом.
@@ -205,7 +223,6 @@
     ];
 
     const grid = document.getElementById('grid');
-    const dlg = document.getElementById('dlg');
 
     for (const v of VARIANTS) {
       const url = `./${v.n}/`;
@@ -219,21 +236,37 @@
         <div class="meta">
           <div class="meta-top">
             <a class="title-link" href="${url}">${v.title}</a>
-            <button class="info-btn" aria-label="Информация о варианте ${v.n}">?</button>
+            <button class="info-btn" aria-expanded="false" aria-controls="info-${v.n}"
+              aria-label="Информация о варианте ${v.n}">?</button>
           </div>
           <div class="tags">${v.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
           <div class="date">Добавлен: ${v.date} · ссылка: <code>/${v.n}/</code></div>
+        </div>
+        <div class="info-wrap" id="info-${v.n}">
+          <div class="info-body">${v.info}</div>
         </div>`;
-      card.querySelector('.info-btn').addEventListener('click', () => {
-        document.getElementById('dlg-title').textContent = v.title;
-        document.getElementById('dlg-body').innerHTML = v.info;
-        dlg.showModal();
+      const btn = card.querySelector('.info-btn');
+      const wrap = card.querySelector('.info-wrap');
+      btn.addEventListener('click', () => {
+        const open = card.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+        btn.textContent = open ? '×' : '?';
+        if (open) {
+          wrap.style.height = wrap.scrollHeight + 'px';
+          wrap.addEventListener('transitionend', function done(e) {
+            if (e.propertyName === 'height' && card.classList.contains('open')) {
+              wrap.style.height = 'auto';
+            }
+            wrap.removeEventListener('transitionend', done);
+          });
+        } else {
+          wrap.style.height = wrap.scrollHeight + 'px';
+          void wrap.offsetHeight; // фиксируем текущую высоту перед схлопыванием
+          wrap.style.height = '0px';
+        }
       });
       grid.appendChild(card);
     }
-
-    document.getElementById('dlg-close').addEventListener('click', () => dlg.close());
-    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
 
     // Масштабируем iframe-превью под ширину карточки (рендерится как десктоп 1280px)
     function scalePreviews() {
