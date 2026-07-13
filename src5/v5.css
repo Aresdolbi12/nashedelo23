@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+/* ===== Вариант 5 — «Рассвет 2.0» =====
+   База — вариант 3 (живое небо, светлеющее при скролле) + фирменный логотип,
+   лента городов, табы программы и маршрут из варианта 2, интро-шторки. */
+
+:root {
+  --ink: #0f2847;
+  --steel: #1e4976;
+  --sky: #a8c8dc;
+  --dawn: #0c1e35;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 96px;
+}
+
+body {
+  font-family: 'Geologica', system-ui, sans-serif;
+  color: #16273d;
+  background: var(--dawn);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+  letter-spacing: -0.03em;
+}
+
+/* Белая панель-поверхность поверх живого неба */
+.panel {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow:
+    0 1px 2px rgba(15, 40, 71, 0.05),
+    0 12px 32px -12px rgba(15, 40, 71, 0.18);
+}
+
+/* Стеклянная капсула навигации */
+.glass-nav {
+  background: rgba(12, 30, 53, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+/* Кнопки-пилюли */
+.btn-light {
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s;
+  box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.35);
+}
+
+.btn-light:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-ghost3 {
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  border-radius: 999px;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.btn-ghost3:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-ink {
+  background: linear-gradient(160deg, #24507f, var(--ink));
+  color: #fff;
+  border-radius: 999px;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s;
+  box-shadow: 0 10px 28px -10px rgba(15, 40, 71, 0.55);
+}
+
+.btn-ink:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 36px -12px rgba(15, 40, 71, 0.6);
+}
+
+/* Облако */
+.cloud3 {
+  position: absolute;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.25) 60%, transparent 80%);
+  filter: blur(10px);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: drift3 var(--drift, 100s) ease-in-out infinite alternate;
+}
+
+@keyframes drift3 {
+  from { transform: translateX(-4%); }
+  to { transform: translateX(6%); }
+}
+
+/* Зерно поверх живого фона */
+.grain3::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* Бегущая строка городов (адаптация ленты варианта 2) */
+.marquee5 {
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+  background: rgba(12, 30, 53, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.marquee5-track {
+  display: inline-flex;
+  animation: marquee5-run 42s linear infinite;
+}
+
+@keyframes marquee5-run {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Карусель спикеров */
+.speaker-card3 {
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #33587f 0%, #17304f 100%);
+  user-select: none;
+}
+
+.drag-track {
+  cursor: grab;
+}
+
+.drag-track:active {
+  cursor: grabbing;
+}
+
+/* Тонкие разделители FAQ */
+.hairline {
+  border-top: 1px solid rgba(15, 40, 71, 0.12);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--steel);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .cloud3 { animation: none; }
+  .marquee5-track { animation: none; }
+}
