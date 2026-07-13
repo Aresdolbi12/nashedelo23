@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+/* ===== Вариант 4 — «Плакат» =====
+   Конструктивистская афиша: бетонный лист, тяжёлая типографика Oswald,
+   наклонные плашки, диагонали, жёсткие края, печатные тени. */
+
+:root {
+  --paper: #f1f1ee;
+  --ink: #12161b;
+  --blue: #1d4a78;
+  --blue-bright: #2a6ba8;
+  --sky: #a8c8dc;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 84px;
+}
+
+body {
+  font-family: 'Onest', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Бетонная фактура листа */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.42 0 0 0 0 0.42 0 0 0 0.12 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.font-poster {
+  font-family: 'Oswald', 'Onest', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+/* Печатная тень (сдвинутый оттиск) */
+.print-shadow {
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.print-shadow-blue {
+  box-shadow: 8px 8px 0 var(--blue);
+}
+
+/* Кнопки-плашки */
+.btn-poster {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 6px 6px 0 var(--ink);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-poster:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 9px 9px 0 var(--ink);
+}
+
+.btn-poster:active {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.btn-outline4 {
+  border: 3px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-outline4:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Наклонное «окно» мирного неба */
+.sky-window {
+  background:
+    radial-gradient(ellipse 70% 45% at 30% 30%, rgba(255, 255, 255, 0.85), transparent 60%),
+    radial-gradient(ellipse 55% 35% at 75% 60%, rgba(255, 255, 255, 0.6), transparent 55%),
+    linear-gradient(165deg, #7fb0d3 0%, #a8c8dc 45%, #d4e5f0 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.cloud4 {
+  position: absolute;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.3) 60%, transparent 80%);
+  filter: blur(7px);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: drift4 var(--drift, 80s) ease-in-out infinite alternate;
+}
+
+@keyframes drift4 {
+  from { transform: translateX(-5%); }
+  to { transform: translateX(7%); }
+}
+
+/* Диагональная лента-стикер */
+.tape {
+  background: var(--ink);
+  color: var(--paper);
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.tape-track {
+  display: inline-flex;
+  animation: tape-run 30s linear infinite;
+}
+
+@keyframes tape-run {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Крутящаяся круглая печать */
+.seal {
+  animation: seal-spin 22s linear infinite;
+}
+
+@keyframes seal-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Строка-афиша расписания: инверсия при наведении */
+.bill-row {
+  border-bottom: 3px solid var(--ink);
+  transition: background 0.25s ease, color 0.25s ease;
+  position: relative;
+}
+
+.bill-row:first-child {
+  border-top: 3px solid var(--ink);
+}
+
+.bill-row:hover {
+  background: var(--blue);
+}
+
+.bill-row:hover .bill-city,
+.bill-row:hover .bill-dates,
+.bill-row:hover .bill-num {
+  color: #fff;
+}
+
+.bill-row .bill-arrow {
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.bill-row:hover .bill-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Толстые линейки */
+.rule-thick {
+  height: 4px;
+  background: var(--ink);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .cloud4, .tape-track, .seal { animation: none; }
+}
