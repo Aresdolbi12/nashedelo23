@@ -59,6 +59,23 @@
       transform-origin: 0 0; pointer-events: none;
       position: absolute; top: 0; left: 0;
     }
+    /* Статичное превью для телефонов: живые iframe (4 React-приложения разом)
+       переполняют память мобильной вкладки, и браузер её перезагружает */
+    .preview-static {
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: flex-end;
+      padding: 16px 18px; text-decoration: none;
+    }
+    .preview-static .pnum {
+      font-family: 'Unbounded', sans-serif; font-weight: 900;
+      font-size: clamp(3.5rem, 18vw, 5.5rem); line-height: 1;
+      color: rgba(255,255,255,0.92);
+      text-shadow: 0 2px 18px rgba(15,40,71,0.35);
+    }
+    .preview-static .pname {
+      margin-top: 6px; font-family: 'Unbounded', sans-serif; font-weight: 700;
+      font-size: 15px; color: #fff; text-shadow: 0 1px 8px rgba(15,40,71,0.45);
+    }
     .preview .open-overlay {
       position: absolute; inset: 0; z-index: 2;
       display: flex; align-items: flex-end; justify-content: flex-end;
@@ -169,6 +186,7 @@
       {
         n: 1,
         title: 'Вариант 1 — «Металл и небо»',
+        grad: 'linear-gradient(160deg, #5a6778 0%, #8a95a5 45%, #a8c8dc 100%)',
         date: '2026-07-12',
         tags: ['React', 'Framer Motion', 'светлый', 'анимации'],
         info: `
@@ -196,6 +214,7 @@
       {
         n: 2,
         title: 'Вариант 2 — «Чертёж дела»',
+        grad: 'linear-gradient(160deg, #1e4976 0%, #2a6ba8 55%, #5a89b8 100%)',
         date: '2026-07-12',
         tags: ['React', 'Framer Motion', 'фаски', 'wow-эффекты'],
         info: `
@@ -223,6 +242,7 @@
       {
         n: 3,
         title: 'Вариант 3 — «Рассвет»',
+        grad: 'linear-gradient(160deg, #0f2847 0%, #1e4976 50%, #d99a5b 115%)',
         date: '2026-07-12',
         tags: ['React', 'Framer Motion', 'современный', 'scroll-story'],
         info: `
@@ -251,6 +271,7 @@
       {
         n: 4,
         title: 'Вариант 4 — «Плакат»',
+        grad: 'linear-gradient(160deg, #12161b 0%, #1d4a78 70%, #a8c8dc 130%)',
         date: '2026-07-12',
         tags: ['React', 'Framer Motion', 'конструктивизм', 'афиша'],
         info: `
@@ -280,15 +301,26 @@
 
     const grid = document.getElementById('grid');
 
+    // На телефонах живые iframe не грузим: 4 React-приложения с анимациями
+    // переполняют память вкладки, и мобильный браузер её перезагружает.
+    const LIVE_PREVIEWS = !(matchMedia('(pointer: coarse)').matches || innerWidth < 900);
+
     for (const v of VARIANTS) {
       const url = `./${v.n}/`;
+      const short = v.title.split('—')[1]?.trim() ?? v.title;
+      const preview = LIVE_PREVIEWS
+        ? `<div class="preview">
+            <iframe src="${url}" loading="lazy" tabindex="-1" title="Превью: ${v.title}"></iframe>
+            <a class="open-overlay" href="${url}"><span>Открыть вариант →</span></a>
+          </div>`
+        : `<a class="preview preview-static" href="${url}" style="background:${v.grad}" aria-label="Открыть: ${v.title}">
+            <span class="pnum">0${v.n}</span>
+            <span class="pname">${short}</span>
+          </a>`;
       const card = document.createElement('article');
       card.className = 'card';
       card.innerHTML = `
-        <div class="preview">
-          <iframe src="${url}" loading="lazy" tabindex="-1" title="Превью: ${v.title}"></iframe>
-          <a class="open-overlay" href="${url}"><span>Открыть вариант →</span></a>
-        </div>
+        ${preview}
         <div class="meta">
           <div class="meta-top">
             <a class="title-link" href="${url}">${v.title}</a>
@@ -326,13 +358,14 @@
 
     // Масштабируем iframe-превью под ширину карточки (рендерится как десктоп 1280px)
     function scalePreviews() {
-      document.querySelectorAll('.preview').forEach((p) => {
-        const iframe = p.querySelector('iframe');
-        iframe.style.transform = `scale(${p.clientWidth / 1280})`;
+      document.querySelectorAll('.preview iframe').forEach((iframe) => {
+        iframe.style.transform = `scale(${iframe.parentElement.clientWidth / 1280})`;
       });
     }
-    scalePreviews();
-    addEventListener('resize', scalePreviews);
+    if (LIVE_PREVIEWS) {
+      scalePreviews();
+      addEventListener('resize', scalePreviews);
+    }
   </script>
 </body>
 </html>

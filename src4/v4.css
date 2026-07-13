@@ -185,6 +185,13 @@ button:focus-visible {
   outline-offset: 3px;
 }
 
+/* Мобильные GPU: блендинг фиксированного полноэкранного слоя и
+   бесконечно анимированный blur слишком дороги — вкладку убивает по памяти */
+@media (max-width: 768px) {
+  body::before { mix-blend-mode: normal; opacity: 0.55; }
+  .cloud4 { animation: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .cloud4, .tape-track, .seal { animation: none; }
