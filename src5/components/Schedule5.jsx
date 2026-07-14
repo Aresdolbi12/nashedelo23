@@ -14,7 +14,7 @@ export default function Schedule5() {
   })
 
   return (
-    <section id="schedule" className="relative px-6 lg:px-10 py-28">
+    <section id="schedule" className="relative px-6 lg:px-10 py-24 md:py-32">
       <div className="max-w-5xl mx-auto">
         <motion.h2
           className="text-[#0f2847] font-black text-4xl md:text-6xl mb-4"
@@ -61,7 +61,7 @@ export default function Schedule5() {
                     className="absolute left-[19px] md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white border-[3px] border-[#1e4976] z-10 shadow"
                     aria-hidden="true"
                   />
-                  <div className={`pl-12 md:pl-0 ${left ? 'md:text-right md:pr-4' : 'md:order-2 md:pl-4'}`}>
+                  <div className={`pl-12 md:pl-0 ${left ? 'md:col-start-1 md:text-right md:pr-4' : 'md:col-start-2 md:pl-4'}`}>
                     <div className="panel inline-block w-full md:w-auto md:min-w-[280px] px-7 py-5 text-left">
                       <div className="font-black text-2xl text-[#0f2847]">{city}</div>
                       <div className="text-[#1e4976] font-semibold mt-0.5">{dates}</div>

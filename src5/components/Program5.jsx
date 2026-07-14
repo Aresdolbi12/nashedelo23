@@ -98,7 +98,7 @@ export default function Program5() {
   const [tab, setTab] = useState('day1')
 
   return (
-    <section id="program" className="relative px-4 sm:px-6 lg:px-10 py-28">
+    <section id="program" className="relative px-4 sm:px-6 lg:px-10 py-24 md:py-32">
       <div className="max-w-5xl mx-auto">
         <motion.h2
           className="text-white font-black text-4xl md:text-6xl mb-4"

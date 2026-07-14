@@ -5,7 +5,7 @@ const EASE = [0.19, 1, 0.22, 1]
 
 export default function Cta5() {
   return (
-    <section id="register" className="relative px-6 lg:px-10 pt-28 pb-36 text-center">
+    <section id="register" className="relative px-6 lg:px-10 py-24 md:py-32 text-center">
       <div className="max-w-3xl mx-auto">
         <motion.h2
           className="text-[#0f2847] font-black text-[clamp(2.5rem,7vw,5.5rem)] leading-[1] mb-8"

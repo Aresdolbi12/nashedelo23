@@ -1,5 +1,4 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Counter } from '../../src2/components/shared2.jsx'
 
 const EASE = [0.19, 1, 0.22, 1]
@@ -18,29 +17,29 @@ const RESULTS = [
   'Навыки управления и работы с людьми',
 ]
 
-/* Текст, проявляющийся слово за словом по мере скролла */
-function WordReveal({ text, className }) {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.5'] })
-  const words = text.split(' ')
-
-  return (
-    <p ref={ref} className={className}>
-      {words.map((word, i) => (
-        <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
-          {word}
-        </Word>
-      ))}
-    </p>
-  )
+/* Текст проявляется слово за словом сам, как только попал в поле зрения —
+   скроллить дальше не нужно */
+const wordVariants = {
+  hidden: { opacity: 0.15 },
+  visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
 }
 
-function Word({ progress, range, children }) {
-  const opacity = useTransform(progress, range, [0.18, 1])
+function WordReveal({ text, className }) {
+  const words = text.split(' ')
   return (
-    <motion.span style={{ opacity }} className="inline">
-      {children}{' '}
-    </motion.span>
+    <motion.p
+      className={className}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-90px' }}
+      variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.028 } } }}
+    >
+      {words.map((word, i) => (
+        <motion.span key={i} variants={wordVariants} className="inline">
+          {word}{' '}
+        </motion.span>
+      ))}
+    </motion.p>
   )
 }
 
@@ -53,7 +52,7 @@ const STATS = [
 
 export default function Mission5() {
   return (
-    <section id="about" className="relative px-6 lg:px-10 py-28 md:py-40">
+    <section id="about" className="relative px-6 lg:px-10 py-24 md:py-32">
       <div className="max-w-6xl mx-auto">
         <WordReveal
           text={MISSION_1}
@@ -76,7 +75,7 @@ export default function Mission5() {
           новые точки роста.
         </motion.p>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-12 mt-24">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-12 mt-20 md:mt-24">
           {STATS.map(({ value, suffix, label }, i) => (
             <motion.div
               key={label}
@@ -94,7 +93,7 @@ export default function Mission5() {
           ))}
         </div>
 
-        <div className="mt-28 grid lg:grid-cols-12 gap-10">
+        <div className="mt-20 md:mt-24 grid lg:grid-cols-12 gap-10">
           <motion.h2
             className="lg:col-span-4 text-white font-black text-3xl md:text-4xl"
             initial={{ opacity: 0, y: 20 }}

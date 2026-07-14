@@ -1,4 +1,5 @@
 import Bg from './components/Bg.jsx'
+import DawnLine from './components/DawnLine.jsx'
 import Intro5 from './components/Intro5.jsx'
 import Nav5 from './components/Nav5.jsx'
 import Hero5 from './components/Hero5.jsx'
@@ -14,6 +15,7 @@ export default function App() {
   return (
     <div className="grain3">
       <Bg />
+      <DawnLine />
       <Intro5 />
       <Nav5 />
       <main>

@@ -8,7 +8,7 @@ export default function Faq5() {
   const [openIndex, setOpenIndex] = useState(0)
 
   return (
-    <section id="faq" className="relative px-4 sm:px-6 lg:px-10 py-28">
+    <section id="faq" className="relative px-4 sm:px-6 lg:px-10 py-24 md:py-32">
       <div className="max-w-4xl mx-auto panel p-7 md:p-12">
         <h2 className="text-[#0f2847] font-black text-4xl md:text-5xl mb-10">Частые вопросы</h2>
 

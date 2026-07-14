@@ -26,7 +26,7 @@ export default function Speakers5() {
   }, [])
 
   return (
-    <section id="speakers" className="relative py-28 overflow-hidden">
+    <section id="speakers" className="relative py-24 md:py-32 overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 lg:px-10 flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
         <motion.h2
           className="text-[#0f2847] font-black text-4xl md:text-6xl"
