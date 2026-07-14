@@ -13,6 +13,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* Горизонтальную обрезку держим на html, а НЕ на body: overflow-x на body
+     в части браузеров делает сам body контейнером прокрутки, и тогда
+     useScroll() (слушает окно) не получает прогресс — небо застывает. */
+  overflow-x: hidden;
 }
 
 section[id] {
@@ -24,7 +28,6 @@ body {
   color: #16273d;
   background: var(--dawn);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 h1, h2, h3 {

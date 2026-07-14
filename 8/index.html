@@ -13,8 +13,9 @@
       rel="stylesheet"
     />
     <style>
-      /* Мгновенный экран загрузки: рисуется до подхвата JS, снимается React'ом */
-      html, body { background: #0c1e35; }
+      /* Мгновенный экран загрузки: рисуется до подхвата JS, снимается React'ом.
+         Фон body НЕ задаём: живое небо (Bg) лежит на z-index:-10 и непрозрачный
+         body его перекрыл бы. Пустой экран до JS закрывает #boot своим фоном. */
       #boot {
         position: fixed; inset: 0; z-index: 200;
         background: linear-gradient(180deg, #16304f 0%, #0c1e35 100%);
