@@ -137,6 +137,24 @@ h1, h2, h3 {
   to { transform: translateX(-50%); }
 }
 
+/* Выезжающие полоски в hero */
+.ribbon-metal {
+  background: linear-gradient(135deg, #8f9aa8 0%, #e3e8ee 45%, #aab4c2 55%, #6d7887 100%);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    0 8px 24px -8px rgba(0, 0, 0, 0.5);
+}
+
+.ribbon-glass {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 8px;
+}
+
 /* Карусель спикеров */
 .speaker-card3 {
   border-radius: 20px;

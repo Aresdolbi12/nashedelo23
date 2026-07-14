@@ -23,7 +23,7 @@ export default function Schedule5() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, ease: EASE }}
         >
-          Семь городов. Один маршрут.
+          Обучение пройдет в семи городах Краснодарского края
         </motion.h2>
         <motion.p
           className="text-[#1e4976] text-lg max-w-xl mb-16"
@@ -32,8 +32,7 @@ export default function Schedule5() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
         >
-          Сентябрь — октябрь 2026. Выберите площадку, до которой удобно добраться, —
-          интенсив пройдёт в каждом городе.
+          Возможность выбрать площадку, до которой удобно добраться
         </motion.p>
 
         <div ref={listRef} className="relative">
@@ -67,9 +66,6 @@ export default function Schedule5() {
                       <div className="font-black text-2xl text-[#0f2847]">{city}</div>
                       <div className="text-[#1e4976] font-semibold mt-0.5">{dates}</div>
                     </div>
-                  </div>
-                  <div className={`pl-12 md:pl-0 text-sm text-[#1e4976]/80 ${left ? 'md:order-2 md:pl-4' : 'md:text-right md:pr-4'}`}>
-                    Группа {group} · очный интенсив, 2 дня
                   </div>
                 </motion.div>
               )

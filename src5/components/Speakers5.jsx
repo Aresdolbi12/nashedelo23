@@ -38,14 +38,13 @@ export default function Speakers5() {
           Спикеры
         </motion.h2>
         <motion.p
-          className="text-[#1e4976] max-w-sm md:text-right"
+          className="text-[#1e4976]/70 text-sm max-w-sm md:text-right"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, delay: 0.15 }}
         >
-          9 практиков. Состав объявим дополнительно.
-          <span className="block text-[#1e4976]/60 text-sm mt-1">← потяните, чтобы посмотреть всех</span>
+          ← потяните, чтобы посмотреть всех
         </motion.p>
       </div>
 

@@ -14,9 +14,7 @@ export default function Cta5() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.9, ease: EASE }}
         >
-          Уже светло.
-          <br />
-          Пора строить.
+          Время действовать
         </motion.h2>
         <motion.p
           className="text-[#1e4976] text-lg md:text-xl leading-relaxed mb-12 max-w-xl mx-auto"
@@ -25,8 +23,8 @@ export default function Cta5() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
         >
-          Заполните короткую анкету — мы свяжемся, расскажем подробности и поможем
-          подготовиться к старту потока.
+          Заполните анкету — мы поможем разобраться в деталях и ответим на все вопросы
+
         </motion.p>
         <motion.div
           initial={{ opacity: 0, scale: 0.92 }}

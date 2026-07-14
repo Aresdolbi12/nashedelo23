@@ -1,21 +1,31 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Counter } from '../../src2/components/shared2.jsx'
-import { BENEFITS } from '../../src2/content.js'
 
 const EASE = [0.19, 1, 0.22, 1]
 
-const MISSION =
-  '«Наше дело» — практическая образовательная программа о развитии предпринимательских навыков. Мы даём системные знания для самостоятельного ведения бизнеса: от оценки рыночных возможностей до устойчивой модели доходов. Очные интенсивы, вебинары, индивидуальные консультации — и ваша личная дорожная карта.'
+const MISSION_1 =
+  'Проект посвящён развитию предпринимательских навыков. Задача — дать системные знания, необходимые для самостоятельного ведения бизнеса: от оценки рыночных возможностей до построения устойчивой модели доходов.'
+
+const MISSION_2 =
+  'В основе программы — очные бизнес-интенсивы, вебинары и индивидуальные консультации. Участники изучат маркетинг, финансовый учёт, взаимодействие с государственными структурами и инструменты получения поддержки.'
+
+const RESULTS = [
+  'Понимание, как устроен бизнес изнутри',
+  'Готовый план действий под свою идею',
+  'Консультации с опытными экспертами',
+  'Информация о льготах, грантах и субсидиях',
+  'Навыки управления и работы с людьми',
+]
 
 /* Текст, проявляющийся слово за словом по мере скролла */
-function WordReveal({ text }) {
+function WordReveal({ text, className }) {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.5'] })
   const words = text.split(' ')
 
   return (
-    <p ref={ref} className="text-white text-2xl md:text-4xl font-semibold leading-snug max-w-4xl">
+    <p ref={ref} className={className}>
       {words.map((word, i) => (
         <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
           {word}
@@ -45,7 +55,14 @@ export default function Mission5() {
   return (
     <section id="about" className="relative px-6 lg:px-10 py-28 md:py-40">
       <div className="max-w-6xl mx-auto">
-        <WordReveal text={MISSION} />
+        <WordReveal
+          text={MISSION_1}
+          className="text-white text-2xl md:text-4xl font-semibold leading-snug max-w-4xl"
+        />
+        <WordReveal
+          text={MISSION_2}
+          className="text-white/95 text-xl md:text-2xl font-medium leading-snug max-w-3xl mt-10"
+        />
 
         <motion.p
           className="text-white/70 text-lg leading-relaxed max-w-2xl mt-10"
@@ -85,20 +102,22 @@ export default function Mission5() {
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.7, ease: EASE }}
           >
-            Что вы увезёте с собой
+            Что вы получите в итоге
           </motion.h2>
           <div className="lg:col-span-8">
-            {BENEFITS.map(({ title, text }, i) => (
+            {RESULTS.map((item, i) => (
               <motion.div
-                key={title}
-                className="border-t border-white/30 py-6 grid sm:grid-cols-[220px_1fr] gap-2 sm:gap-8"
+                key={item}
+                className="border-t border-white/30 py-6 flex items-baseline gap-6"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.6, ease: EASE, delay: i * 0.07 }}
               >
-                <div className="text-white font-bold text-lg">{title}</div>
-                <div className="text-white/70 leading-relaxed">{text}</div>
+                <span className="text-[#a8c8dc] font-bold text-sm tracking-widest flex-shrink-0">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="text-white font-semibold text-lg md:text-2xl leading-snug">{item}</span>
               </motion.div>
             ))}
           </div>

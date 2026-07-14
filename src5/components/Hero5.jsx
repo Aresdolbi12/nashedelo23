@@ -50,24 +50,25 @@ export default function Hero5() {
             transition={{ duration: 1.1, ease: EASE, delay: 1.15 }}
           />
 
-          <motion.p
-            className="text-[#c7d9e8] font-medium mt-8 text-lg md:text-xl"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.7 }}
-          >
-            Для ветеранов боевых действий, участников СВО и их семей
-          </motion.p>
-
-          <motion.p
-            className="text-white/75 text-base md:text-lg max-w-xl mx-auto leading-relaxed mt-4 mb-10 font-light"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: EASE, delay: 1.85 }}
-          >
-            Бесплатная практическая программа о предпринимательстве: два дня интенсива,
-            вебинары и личная дорожная карта — от идеи до устойчивого бизнеса.
-          </motion.p>
+          {/* Выезжающие полоски: металл + стекло */}
+          <div className="mt-9 mb-10 flex flex-col items-center gap-3">
+            <motion.div
+              className="ribbon-metal px-6 md:px-9 py-2.5 text-[#101820] font-extrabold tracking-[0.14em] text-sm md:text-lg uppercase"
+              initial={{ opacity: 0, x: -90 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.85, ease: EASE, delay: 1.65 }}
+            >
+              Образовательная бизнес-программа
+            </motion.div>
+            <motion.div
+              className="ribbon-glass px-6 md:px-9 py-2.5 text-white/95 font-semibold tracking-[0.1em] text-[11px] md:text-sm uppercase"
+              initial={{ opacity: 0, x: 90 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.85, ease: EASE, delay: 1.85 }}
+            >
+              Для ветеранов боевых действий, участников СВО и&nbsp;членов их&nbsp;семей
+            </motion.div>
+          </div>
 
           <motion.div
             className="flex flex-wrap items-center justify-center gap-4"
@@ -84,20 +85,27 @@ export default function Hero5() {
             </a>
           </motion.div>
 
+          {/* Стеклянная кнопка-стрелка вниз */}
           <motion.div
-            className="flex flex-col items-center gap-2 text-white/60 mt-14"
+            className="mt-14"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2.6, duration: 1 }}
+            transition={{ delay: 2.5, duration: 1 }}
           >
-            <span className="text-xs font-medium tracking-wide">листайте — светает</span>
-            <motion.svg
-              width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            <a
+              href="#about"
+              aria-label="К описанию программы"
+              className="inline-flex w-12 h-12 rounded-full border border-white/30 bg-white/10 backdrop-blur items-center justify-center text-white/85 hover:bg-white/20 hover:border-white/50 transition"
             >
-              <polyline points="6 9 12 15 18 9" />
-            </motion.svg>
+              <motion.svg
+                width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                animate={{ y: [0, 4, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                aria-hidden="true"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </motion.svg>
+            </a>
           </motion.div>
         </div>
       </div>
