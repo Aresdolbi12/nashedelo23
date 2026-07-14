@@ -19,6 +19,7 @@ export default defineConfig({
         v5: resolve(__dirname, '5/index.html'),
         v6: resolve(__dirname, '6/index.html'),
         v7: resolve(__dirname, '7/index.html'),
+        v8: resolve(__dirname, '8/index.html'),
       },
     },
   },
