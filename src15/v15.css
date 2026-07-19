@@ -208,7 +208,7 @@ h1, h2, h3 {
   display: inline-flex;
   flex-wrap: nowrap;
   will-change: transform;
-  animation: marquee11 48s linear infinite;
+  animation: marquee11 144s linear infinite;
 }
 @keyframes marquee11 {
   from { transform: translateX(0); }

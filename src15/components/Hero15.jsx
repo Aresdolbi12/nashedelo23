@@ -42,9 +42,11 @@ function CityRow() {
 function CalmMarquee() {
   return (
     <div className="marquee10">
+      {/* 6 копий (3 на половину цикла): половина трека шире любого экрана,
+          включая 34" ультраширокие — стык -50% никогда не попадает в кадр */}
       <div className="marquee11-track">
-        <CityRow />
-        <CityRow />
+        <CityRow /><CityRow /><CityRow />
+        <CityRow /><CityRow /><CityRow />
       </div>
     </div>
   )

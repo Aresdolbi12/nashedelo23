@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 
-const EASE = [0.19, 1, 0.22, 1]
+const EASE = [0.32, 0.72, 0, 1]
 
 /* «О НАС ПИШУТ» — плашки-цитаты СМИ, к которым из-за краёв экрана
    подходят металлические линии-змейки с радиусными петлями
@@ -30,7 +30,7 @@ const ROWS = [
   },
 ]
 
-/* Серебряная линия: градиент вдоль штриха + дорисовка при появлении */
+/* Светящаяся нить: тонкий тёплый штрих с glow, дорисовка при появлении */
 function SnakeLine({ d, id }) {
   return (
     <svg
@@ -42,18 +42,16 @@ function SnakeLine({ d, id }) {
     >
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="1" y2="0.25">
-          <stop offset="0" stopColor="#eef1f4" />
-          <stop offset="0.45" stopColor="#aeb9c4" />
-          <stop offset="0.7" stopColor="#dfe5ea" />
-          <stop offset="1" stopColor="#6d7887" />
+          <stop offset="0" stopColor="#f6e9d8" />
+          <stop offset="0.5" stopColor="#d9bfa8" />
+          <stop offset="1" stopColor="#8f6f52" />
         </linearGradient>
       </defs>
-      {/* Тень линии — объём */}
-      <path d={d} stroke="rgba(7,24,17,0.35)" strokeWidth="30" strokeLinecap="round" transform="translate(0 5)" />
       <motion.path
         d={d}
+        className="thread17"
         stroke={`url(#${id})`}
-        strokeWidth="26"
+        strokeWidth="3"
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         whileInView={{ pathLength: 1 }}
