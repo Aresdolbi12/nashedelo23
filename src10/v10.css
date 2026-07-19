@@ -1,0 +1,206 @@
+@import "tailwindcss";
+
+/* ===== Вариант 5 — «Рассвет 2.0» =====
+   База — вариант 3 (живое небо, светлеющее при скролле) + фирменный логотип,
+   лента городов, табы программы и маршрут из варианта 2, интро-шторки. */
+
+:root {
+  --ink: #0f2847;
+  --steel: #1e4976;
+  --sky: #a8c8dc;
+  --dawn: #0c1e35;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Горизонтальную обрезку держим на html, а НЕ на body: overflow-x на body
+     в части браузеров делает сам body контейнером прокрутки, и тогда
+     useScroll() (слушает окно) не получает прогресс — небо застывает. */
+  overflow-x: hidden;
+}
+
+section[id] {
+  scroll-margin-top: 96px;
+}
+
+body {
+  font-family: 'Geologica', system-ui, sans-serif;
+  color: #16273d;
+  background: var(--dawn);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+  letter-spacing: -0.03em;
+}
+
+/* Белая панель-поверхность поверх живого неба */
+.panel {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow:
+    0 1px 2px rgba(15, 40, 71, 0.05),
+    0 12px 32px -12px rgba(15, 40, 71, 0.18);
+}
+
+/* Стеклянная капсула навигации */
+.glass-nav {
+  background: rgba(12, 30, 53, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+/* Кнопки-пилюли */
+.btn-light {
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s;
+  box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.35);
+}
+
+.btn-light:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-ghost3 {
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  border-radius: 999px;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.btn-ghost3:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-ink {
+  background: linear-gradient(160deg, #24507f, var(--ink));
+  color: #fff;
+  border-radius: 999px;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s;
+  box-shadow: 0 10px 28px -10px rgba(15, 40, 71, 0.55);
+}
+
+.btn-ink:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 36px -12px rgba(15, 40, 71, 0.6);
+}
+
+/* Объёмные облака (feTurbulence): слои дрейфуют по горизонтали с разной скоростью.
+   Сам SVG-фильтр статичен и кэшируется — двигаем только контейнер (дёшево для GPU). */
+.cloud-layer {
+  position: absolute;
+  inset: -6% -20%;            /* с запасом по краям, чтобы дрейф не оголял углы */
+  pointer-events: none;
+  will-change: transform;
+}
+.cloud-svg { width: 100%; height: 100%; display: block; }
+
+/* Внутренний дрейф отдельным элементом, чтобы не конфликтовать с параллаксом (y) на родителе */
+.cloud-far .cloud-svg { animation: cloud-drift-far 140s linear infinite alternate; }
+.cloud-near .cloud-svg { animation: cloud-drift-near 90s linear infinite alternate; }
+
+@keyframes cloud-drift-far {
+  from { transform: translate3d(-3%, 0, 0) scale(1.06); }
+  to { transform: translate3d(4%, -1%, 0) scale(1.06); }
+}
+@keyframes cloud-drift-near {
+  from { transform: translate3d(3%, 0, 0) scale(1.12); }
+  to { transform: translate3d(-5%, 1%, 0) scale(1.12); }
+}
+.cloud-near { top: 22%; }      /* ближний слой держим ниже, ближе к горизонту */
+
+/* Зерно поверх живого фона */
+.grain3::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* Карусель спикеров */
+.speaker-card3 {
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #33587f 0%, #17304f 100%);
+  user-select: none;
+}
+
+.drag-track {
+  cursor: grab;
+}
+
+.drag-track:active {
+  cursor: grabbing;
+}
+
+/* Тонкие разделители FAQ */
+.hairline {
+  border-top: 1px solid rgba(15, 40, 71, 0.12);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--steel);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .cloud-far .cloud-svg, .cloud-near .cloud-svg { animation: none; }
+}
+
+/* ===== v10: живое небо + реактивная лента ===== */
+
+/* Дышащее свечение восходящего солнца за логотипом */
+.sun-glow9 {
+  position: absolute; left: 50%; top: 50%;
+  width: 62vmin; height: 62vmin; margin: -31vmin 0 0 -31vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 222, 150, 0.34) 0%, rgba(255, 200, 120, 0.12) 42%, transparent 72%);
+  animation: glow9 9s ease-in-out infinite;
+}
+@keyframes glow9 { 0%, 100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.04); opacity: 1; } }
+
+/* Лента городов: скорость задаёт JS (реакция на скролл), CSS отвечает за вид.
+   Растушёванные края + подложка-стекло. */
+.marquee10 {
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+  background: rgba(12, 30, 53, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.875rem 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+}
+
+.marquee10-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  will-change: transform;
+}
+
+/* Мобильные: у feTurbulence большая площадь дороже для GPU — оставляем один слой
+   и без дрейфа (урок варианта 4 про вечные GPU-эффекты на телефоне) */
+@media (max-width: 767px) {
+  .cloud-far { display: none; }
+  .cloud-near .cloud-svg { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun-glow9 { animation: none; }
+}

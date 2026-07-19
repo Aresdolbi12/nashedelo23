@@ -1,0 +1,360 @@
+@import "tailwindcss";
+
+/* ===== Вариант 5 — «Рассвет 2.0» =====
+   База — вариант 3 (живое небо, светлеющее при скролле) + фирменный логотип,
+   лента городов, табы программы и маршрут из варианта 2, интро-шторки. */
+
+:root {
+  --ink: #0f2847;
+  --steel: #1e4976;
+  --sky: #a8c8dc;
+  --dawn: #0c1e35;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Горизонтальную обрезку держим на html, а НЕ на body: overflow-x на body
+     в части браузеров делает сам body контейнером прокрутки, и тогда
+     useScroll() (слушает окно) не получает прогресс — небо застывает. */
+  overflow-x: hidden;
+}
+
+section[id] {
+  scroll-margin-top: 96px;
+}
+
+body {
+  font-family: 'Geologica', system-ui, sans-serif;
+  color: #16273d;
+  background: var(--dawn);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+  letter-spacing: -0.03em;
+}
+
+/* Белая панель-поверхность поверх живого неба */
+.panel {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow:
+    0 1px 2px rgba(15, 40, 71, 0.05),
+    0 12px 32px -12px rgba(15, 40, 71, 0.18);
+}
+
+/* Стеклянная капсула навигации */
+.glass-nav {
+  background: rgba(12, 30, 53, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+/* Кнопки-пилюли */
+.btn-light {
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s;
+  box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.35);
+}
+
+.btn-light:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-ghost3 {
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  border-radius: 999px;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.btn-ghost3:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-ink {
+  background: linear-gradient(160deg, #24507f, var(--ink));
+  color: #fff;
+  border-radius: 999px;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s;
+  box-shadow: 0 10px 28px -10px rgba(15, 40, 71, 0.55);
+}
+
+.btn-ink:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 36px -12px rgba(15, 40, 71, 0.6);
+}
+
+/* Объёмные облака (feTurbulence): слои дрейфуют по горизонтали с разной скоростью.
+   Сам SVG-фильтр статичен и кэшируется — двигаем только контейнер (дёшево для GPU). */
+.cloud-layer {
+  position: absolute;
+  /* Запас по краям, чтобы дрейф не оголял углы. Снизу запас больше:
+     параллакс поднимает ближний слой до -22% высоты, и при старом -6%
+     нижняя кромка слоя въезжала в экран — «ползущая» полоса фона внизу
+     (баг v13 на десктопе и в мобильном Safari). */
+  inset: -6% -20% -32%;
+  pointer-events: none;
+  will-change: transform;
+}
+.cloud-svg { width: 100%; height: 100%; display: block; }
+
+/* Внутренний дрейф отдельным элементом, чтобы не конфликтовать с параллаксом (y) на родителе */
+.cloud-far .cloud-svg { animation: cloud-drift-far 140s linear infinite alternate; }
+.cloud-near .cloud-svg { animation: cloud-drift-near 90s linear infinite alternate; }
+
+@keyframes cloud-drift-far {
+  from { transform: translate3d(-3%, 0, 0) scale(1.06); }
+  to { transform: translate3d(4%, -1%, 0) scale(1.06); }
+}
+@keyframes cloud-drift-near {
+  from { transform: translate3d(3%, 0, 0) scale(1.12); }
+  to { transform: translate3d(-5%, 1%, 0) scale(1.12); }
+}
+.cloud-near { top: 22%; }      /* ближний слой держим ниже, ближе к горизонту */
+
+/* Зерно поверх живого фона */
+.grain3::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* Карусель спикеров */
+.speaker-card3 {
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #33587f 0%, #17304f 100%);
+  user-select: none;
+}
+
+.drag-track {
+  cursor: grab;
+}
+
+.drag-track:active {
+  cursor: grabbing;
+}
+
+/* Тонкие разделители FAQ */
+.hairline {
+  border-top: 1px solid rgba(15, 40, 71, 0.12);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--steel);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .cloud-far .cloud-svg, .cloud-near .cloud-svg { animation: none; }
+}
+
+/* ===== v11: перелив логотипа, спокойная лента, облака-цитаты ===== */
+
+/* Пробегающий металлический блик по буквам логотипа (перелив из варианта 8):
+   слой обрезан маской по форме логотипа, по нему едет светлая полоса */
+.logo-glint11 {
+  position: absolute; inset: 0;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  overflow: hidden; pointer-events: none;
+}
+.logo-glint11::after {
+  content: ''; position: absolute; top: -20%; bottom: -20%; left: -45%; width: 45%;
+  background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.55) 50%, transparent 80%);
+  transform: skewX(-18deg);
+  animation: glint11 5.2s ease-in-out infinite;
+}
+@keyframes glint11 { 0%, 55% { left: -45%; } 85%, 100% { left: 115%; } }
+
+/* Лёгкий дрейф логотипа: медленное покачивание, чтобы металл жил, а не висел.
+   Отдельный внутренний слой — не конфликтует с framer-входом на родителе. */
+.logo-drift11 {
+  animation: logo-drift11 9s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes logo-drift11 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(-0.5deg); }
+  66% { transform: translateY(4px) rotate(0.45deg); }
+}
+
+/* Фикс мобильного бага: fixed-фон с inset: 0 тянется за visual viewport,
+   и при прятании/появлении нижней панели браузера небо «дышит» по высоте.
+   Держим высоту по большому виевпорту (lvh) — она не меняется при скролле. */
+@supports (height: 100lvh) {
+  .bg-viewport11 {
+    bottom: auto;
+    height: 100lvh;
+  }
+}
+
+/* Лента городов: постоянная спокойная скорость (вернулись от реактивной ленты v10).
+   Две копии ряда → сдвиг на -50% даёт бесшовную петлю. Едет без остановок,
+   в том числе при наведении курсора. */
+.marquee11-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  will-change: transform;
+  animation: marquee11 48s linear infinite;
+}
+@keyframes marquee11 {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Фикс v10-бага: у ближнего облачного слоя top: 22%, и его верхний край
+   резал экран жёсткой горизонтальной линией. Растушёвываем кромку маской. */
+.cloud-near {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, black 26%);
+  mask-image: linear-gradient(180deg, transparent 0, black 26%);
+}
+
+/* ===== Табличка-цитата: светлое матовое железо в цвет логотипа =====
+   Шлифованная пластина: металлический градиент + тонкая горизонтальная
+   «щётка», фаска по кромке (светлая сверху, тёмная снизу), гравированная
+   рамка, винты по углам и медленный пробегающий блик, как на логотипе. */
+.plaque13 {
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(255, 255, 255, 0.06) 0 1px,
+      rgba(70, 84, 98, 0.05) 1px 2px),
+    linear-gradient(168deg,
+      #eef1f4 0%, #ccd4db 34%, #aeb9c4 52%, #c6cfd6 68%, #dfe5ea 100%);
+  border: 1px solid rgba(58, 70, 84, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(38, 50, 64, 0.28),
+    0 14px 30px -12px rgba(12, 30, 53, 0.5);
+  overflow: hidden;
+}
+
+/* Гравированная рамка-желобок по периметру */
+.plaque13::before {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border-radius: 7px;
+  border: 1px solid rgba(58, 70, 84, 0.32);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+/* Медленный блик, пробегающий по металлу (в паре с бликом логотипа) */
+.plaque13::after {
+  content: '';
+  position: absolute;
+  top: -20%; bottom: -20%; left: -40%; width: 38%;
+  background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.5) 50%, transparent 80%);
+  transform: skewX(-18deg);
+  animation: plaque13-glint 7.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes plaque13-glint { 0%, 60% { left: -40%; } 90%, 100% { left: 120%; } }
+
+/* Гравированный текст: тёмная сталь с высветленной нижней кромкой штриха */
+.plaque13-text {
+  color: #414d5a;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* Винт: шляпка с радиальным градиентом и шлиц под отвёртку */
+.plaque13-screw {
+  position: absolute;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f2f5f7 0%, #b9c2cb 45%, #79858f 100%);
+  box-shadow:
+    inset 0 -1px 1px rgba(30, 40, 52, 0.4),
+    0 1px 1px rgba(255, 255, 255, 0.5);
+  display: flex; align-items: center; justify-content: center;
+}
+.plaque13-slot {
+  width: 7px; height: 1.5px;
+  background: rgba(45, 56, 68, 0.55);
+  border-radius: 1px;
+  transform: rotate(-24deg);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.plaque13-screw:nth-of-type(2) .plaque13-slot { transform: rotate(41deg); }
+.plaque13-screw:nth-of-type(3) .plaque13-slot { transform: rotate(78deg); }
+.plaque13-screw:nth-of-type(4) .plaque13-slot { transform: rotate(-63deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-glint11::after, .logo-drift11, .marquee11-track,
+  .plaque13::after { animation: none; }
+}
+
+/* ===== v10: живое небо + реактивная лента ===== */
+
+/* Лента городов: скорость задаёт JS (реакция на скролл), CSS отвечает за вид.
+   Растушёванные края + подложка-стекло. */
+.marquee10 {
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+  background: rgba(12, 30, 53, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.875rem 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+}
+
+.marquee10-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  will-change: transform;
+}
+
+/* ===== Мобильная разгрузка (v14) =====
+   На iPhone 16 Pro Max (3x + 120 Гц) сайт лагал: каждый вечный эффект и
+   каждый blend/backdrop-слой на полный экран умножается на разрешение и
+   частоту кадров. На телефонах оставляем статичную картинку неба:
+   один слой облаков без дрейфа и параллакса, без зерна, без стеклянных
+   размытий, без бегущих бликов. Сама лента городов остаётся (дёшево). */
+@media (max-width: 767px) {
+  /* Облака: один слой, без дрейфа (параллакс отключён в Bg по matchMedia) */
+  .cloud-far { display: none; }
+  .cloud-near .cloud-svg { animation: none; }
+
+  /* Полноэкранное зерно с mix-blend-mode — главный подозреваемый в лагах */
+  .grain3::after { display: none; }
+
+  /* Стеклянные размытия → полупрозрачные подложки без blur */
+  .glass-nav {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(12, 30, 53, 0.92);
+  }
+  .marquee10 {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(12, 30, 53, 0.85);
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  /* Вечные блики и дрейф логотипа/табличек */
+  .logo-glint11 { display: none; }
+  .logo-drift11 { animation: none; }
+  .plaque13::after { display: none; }
+}
