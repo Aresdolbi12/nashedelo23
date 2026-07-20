@@ -431,3 +431,18 @@ button:focus-visible {
 @media (max-width: 767px), (prefers-reduced-motion: reduce) {
   .qdrift22 { animation: none; }
 }
+
+
+/* ===== v23: волна блеска по буквам логотипа ===== */
+.letter23 {
+  animation: letter23 5.5s ease-in-out infinite;
+  animation-delay: var(--ld, 0s);
+}
+@keyframes letter23 {
+  0%, 68%, 100% { filter: brightness(1); }
+  76% { filter: brightness(1.75); }
+  84% { filter: brightness(1); }
+}
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .letter23 { animation: none; }
+}

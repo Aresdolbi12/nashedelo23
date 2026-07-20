@@ -439,3 +439,51 @@ main > section + section {
 @media (max-width: 767px), (prefers-reduced-motion: reduce) {
   .qdrift22 { animation: none; }
 }
+
+
+/* ===== v25: гравировка лучом ===== */
+.logo25-outline {
+  font-family: 'Unbounded', 'Geologica', sans-serif;
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(174, 185, 196, 0.5);
+}
+.logo25-clip {
+  animation: clip25 1.7s cubic-bezier(0.65, 0, 0.35, 1) 0.75s both;
+}
+@keyframes clip25 {
+  from { clip-path: inset(-8% 100% -8% 0); }
+  to { clip-path: inset(-8% 0% -8% 0); }
+}
+.logo25-beam {
+  position: absolute;
+  top: -12%;
+  bottom: -12%;
+  left: 0;
+  width: 4px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, transparent, #f6efe6 30%, #fff 50%, #f6efe6 70%, transparent);
+  box-shadow: 0 0 18px 5px rgba(246, 239, 230, 0.5);
+  opacity: 0;
+  animation: beam25 1.7s cubic-bezier(0.65, 0, 0.35, 1) 0.75s both;
+  pointer-events: none;
+}
+@keyframes beam25 {
+  0% { left: 0%; opacity: 0; }
+  6% { opacity: 1; }
+  94% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+/* Штатный блик включается после гравировки */
+.logo25-after {
+  opacity: 0;
+  animation: after25 0.1s linear 2.5s both;
+}
+@keyframes after25 { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .logo25-clip, .logo25-beam, .logo25-after { animation: none; }
+  .logo25-clip { clip-path: none; }
+  .logo25-after { opacity: 1; }
+}

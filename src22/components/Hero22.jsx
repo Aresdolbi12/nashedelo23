@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { ArrowIcon } from '../../src2/components/shared2.jsx'
 import { SCHEDULE } from '../content.js'
 import Logo15 from './Logo15.jsx'
+import LogoFx22 from './LogoFx22.jsx'
 import Star22 from './Star22.jsx'
 import orgNats from '../assets/org-natsproekty.webp'
 import orgDep from '../assets/org-departament.webp'
@@ -96,7 +97,7 @@ export default function Hero22({ starDraw = false }) {
           >
             <div className="logo-drift11 relative drop-shadow-[0_18px_45px_rgba(0,0,0,0.55)]">
               <h1 className="sr-only">Наше дело</h1>
-              <Logo15 size="poster" shine />
+              <LogoFx22 />
             </div>
           </motion.div>
         </div>
