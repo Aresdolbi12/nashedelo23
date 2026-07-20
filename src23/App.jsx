@@ -18,7 +18,7 @@ export default function App() {
     <div className="grain3 relative">
       <Bg22 />
       {/* Таблички-цитаты живут на фоне (отрицательный z-index), скролл не удлиняют */}
-      <QuotePlaques15 />
+      <QuotePlaques15 offset={1} />
       <Intro5 />
       <Nav5 />
       <main>
