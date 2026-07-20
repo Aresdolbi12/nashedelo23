@@ -403,3 +403,28 @@ button:focus-visible {
   text-transform: uppercase;
   color: rgba(217, 191, 168, 0.75);
 }
+
+
+/* ===== Плашки-цитаты: тёплый беж вместо металла ===== */
+.qplaque22 {
+  background: linear-gradient(165deg, #f4ecdf 0%, #ebdccf 55%, #e3d0bd 100%);
+  border: 1px solid rgba(197, 139, 104, 0.45);
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 0 0 1px rgba(197, 139, 104, 0.08),
+    0 18px 38px -18px rgba(0, 0, 0, 0.5);
+}
+
+/* Ambient-дрейф плашки: медленное «дыхание» на фоне */
+.qdrift22 {
+  animation: qdrift22 9s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes qdrift22 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .qdrift22 { animation: none; }
+}
