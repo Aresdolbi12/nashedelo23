@@ -6,12 +6,10 @@ const EASE = [0.19, 1, 0.22, 1]
 /* Суть двух абзацев миссии, разложенная тезисами по табличкам
    с подсветкой границ при наведении (frame15:hover) */
 const THESES = [
-  ['Системные знания', 'От оценки рыночных возможностей до устойчивой модели доходов'],
-  ['Очные интенсивы', 'Два дня живой практики в вашем городе'],
-  ['Вебинары и консультации', 'Индивидуальная работа с экспертами программы'],
-  ['Маркетинг и финучёт', 'Базовые инструменты самостоятельного ведения бизнеса'],
-  ['Диалог с государством', 'Взаимодействие с госструктурами без посредников'],
-  ['Инструменты поддержки', 'Льготы, гранты и субсидии для своего дела'],
+  ['Своё дело — это навык', 'Проект развивает предпринимательские навыки: системные знания для самостоятельного ведения бизнеса'],
+  ['От рынка до модели доходов', 'Оценка рыночных возможностей и построение устойчивой экономики своего дела'],
+  ['Три формата обучения', 'Очные бизнес-интенсивы, вебинары и индивидуальные консультации'],
+  ['Прикладные темы', 'Маркетинг, финансовый учёт, работа с госструктурами и инструменты получения поддержки'],
 ]
 
 const RESULTS = [
@@ -33,19 +31,39 @@ export default function Mission5() {
   return (
     <section id="about" className="relative px-6 lg:px-10 py-24 md:py-32">
       <div className="max-w-6xl mx-auto">
-        {/* Тезисы-таблички */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        {/* Тезисы v23: контурные таблички лестницей, описание собирается по словам */}
+        <div className="flex flex-col gap-5 md:gap-6">
           {THESES.map(([title, text], i) => (
             <motion.div
               key={title}
-              className="frame15 p-6 md:p-7"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              className={`th23 p-6 md:p-8 w-full md:w-[76%] ${i % 2 ? 'md:ml-auto' : ''}`}
+              initial={{ opacity: 0, x: i % 2 ? 60 : -60, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, ease: EASE, delay: i * 0.06 }}
+              transition={{ duration: 0.8, ease: EASE }}
             >
-              <div className="text-[#f2ece3] font-black text-lg md:text-xl leading-snug">{title}</div>
-              <div className="text-[#d9c9b8]/85 text-sm md:text-base leading-relaxed mt-2.5">{text}</div>
+              <div className="text-[#f2ece3] font-black text-xl md:text-2xl leading-snug">{title}</div>
+              <motion.p
+                className="text-[#d9c9b8]/85 text-sm md:text-base leading-relaxed mt-3"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-60px' }}
+                variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03, delayChildren: 0.3 } } }}
+              >
+                {text.split(' ').map((w, wi) => (
+                  <motion.span
+                    key={wi}
+                    className="inline-block"
+                    variants={{
+                      hidden: { opacity: 0, y: 10 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE } },
+                    }}
+                  >
+                    {w}
+                    {'\u00a0'}
+                  </motion.span>
+                ))}
+              </motion.p>
             </motion.div>
           ))}
         </div>

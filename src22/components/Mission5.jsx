@@ -6,12 +6,12 @@ const EASE = [0.19, 1, 0.22, 1]
 /* Суть двух абзацев миссии, разложенная тезисами по табличкам
    с подсветкой границ при наведении (frame15:hover) */
 const THESES = [
-  ['Системные знания', 'От оценки рыночных возможностей до устойчивой модели доходов'],
-  ['Очные интенсивы', 'Два дня живой практики в вашем городе'],
-  ['Вебинары и консультации', 'Индивидуальная работа с экспертами программы'],
-  ['Маркетинг и финучёт', 'Базовые инструменты самостоятельного ведения бизнеса'],
-  ['Диалог с государством', 'Взаимодействие с госструктурами без посредников'],
-  ['Инструменты поддержки', 'Льготы, гранты и субсидии для своего дела'],
+  ['Навыки предпринимателя', 'Системные знания для самостоятельного ведения бизнеса'],
+  ['От идеи к доходу', 'От оценки рыночных возможностей до устойчивой модели доходов'],
+  ['Очные бизнес-интенсивы', 'Основа программы: живая практика в вашем городе'],
+  ['Вебинары и консультации', 'Онлайн-занятия и индивидуальная работа с экспертами'],
+  ['Маркетинг и финучёт', 'Прикладные инструменты управления своим делом'],
+  ['Государство как ресурс', 'Работа с госструктурами и инструменты получения поддержки'],
 ]
 
 const RESULTS = [
@@ -33,19 +33,20 @@ export default function Mission5() {
   return (
     <section id="about" className="relative px-6 lg:px-10 py-24 md:py-32">
       <div className="max-w-6xl mx-auto">
-        {/* Тезисы-таблички */}
+        {/* Тезисы v22: пластины живого металла — блик проходит при наведении */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {THESES.map(([title, text], i) => (
             <motion.div
               key={title}
-              className="frame15 p-6 md:p-7"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              className="frame15 th22 relative overflow-hidden p-6 md:p-7"
+              initial={{ opacity: 0, y: 30, scale: 0.96, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, ease: EASE, delay: i * 0.06 }}
+              transition={{ duration: 0.75, ease: EASE, delay: i * 0.07 }}
             >
-              <div className="text-[#f2ece3] font-black text-lg md:text-xl leading-snug">{title}</div>
-              <div className="text-[#d9c9b8]/85 text-sm md:text-base leading-relaxed mt-2.5">{text}</div>
+              <span className="th22-sheen" aria-hidden="true" />
+              <div className="relative text-[#f2ece3] font-black text-lg md:text-xl leading-snug">{title}</div>
+              <div className="relative text-[#d9c9b8]/85 text-sm md:text-base leading-relaxed mt-2.5">{text}</div>
             </motion.div>
           ))}
         </div>

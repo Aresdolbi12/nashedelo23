@@ -439,3 +439,29 @@ button:focus-visible {
 @media (max-width: 767px), (prefers-reduced-motion: reduce) {
   .qp22 { animation: none; }
 }
+
+
+/* ===== Тезисы v22: металлический блик при наведении ===== */
+.th22 {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s;
+}
+.th22:hover { transform: translateY(-4px); }
+.th22-sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -45%;
+  width: 40%;
+  background: linear-gradient(105deg, transparent, rgba(246, 239, 230, 0.16), transparent);
+  transform: skewX(-12deg);
+  pointer-events: none;
+}
+.th22:hover .th22-sheen { animation: th22-sweep 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes th22-sweep {
+  from { left: -45%; }
+  to { left: 105%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .th22:hover .th22-sheen { animation: none; }
+  .th22:hover { transform: none; }
+}

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Counter } from '../../src2/components/shared2.jsx'
 
 const EASE = [0.19, 1, 0.22, 1]
@@ -6,12 +6,12 @@ const EASE = [0.19, 1, 0.22, 1]
 /* Суть двух абзацев миссии, разложенная тезисами по табличкам
    с подсветкой границ при наведении (frame15:hover) */
 const THESES = [
-  ['Системные знания', 'От оценки рыночных возможностей до устойчивой модели доходов'],
-  ['Очные интенсивы', 'Два дня живой практики в вашем городе'],
-  ['Вебинары и консультации', 'Индивидуальная работа с экспертами программы'],
-  ['Маркетинг и финучёт', 'Базовые инструменты самостоятельного ведения бизнеса'],
-  ['Диалог с государством', 'Взаимодействие с госструктурами без посредников'],
-  ['Инструменты поддержки', 'Льготы, гранты и субсидии для своего дела'],
+  ['Предпринимательские навыки', 'Проект даёт системные знания для самостоятельного ведения бизнеса'],
+  ['Рынок и модель доходов', 'От оценки рыночных возможностей до устойчивой экономики дела'],
+  ['Очные бизнес-интенсивы', 'Основа программы — живая практика в вашем городе'],
+  ['Вебинары', 'Онлайн-разборы ключевых тем с экспертами программы'],
+  ['Индивидуальные консультации', 'Личная работа с экспертом над вашей задачей'],
+  ['Маркетинг, финучёт, господдержка', 'Прикладные темы и работа с госструктурами'],
 ]
 
 const RESULTS = [
@@ -30,22 +30,38 @@ const STATS = [
 ]
 
 export default function Mission5() {
+  const reduceMotion = useReducedMotion()
   return (
     <section id="about" className="relative px-6 lg:px-10 py-24 md:py-32">
       <div className="max-w-6xl mx-auto">
-        {/* Тезисы-таблички */}
+        {/* Тезисы v25: гравированные плиты — рамка дорисовывается штрихом */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {THESES.map(([title, text], i) => (
             <motion.div
               key={title}
-              className="frame15 p-6 md:p-7"
-              initial={{ opacity: 0, y: 24 }}
+              className="th25 relative p-6 md:p-7"
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, ease: EASE, delay: i * 0.06 }}
+              transition={{ duration: 0.6, ease: EASE, delay: i * 0.07 }}
             >
-              <div className="text-[#f2ece3] font-black text-lg md:text-xl leading-snug">{title}</div>
-              <div className="text-[#d9c9b8]/85 text-sm md:text-base leading-relaxed mt-2.5">{text}</div>
+              <svg className="absolute inset-0 w-full h-full overflow-visible" fill="none" aria-hidden="true">
+                <motion.rect
+                  x="0.6"
+                  y="0.6"
+                  rx="15"
+                  style={{ width: 'calc(100% - 1.2px)', height: 'calc(100% - 1.2px)' }}
+                  className="th25-frame"
+                  stroke="rgba(217, 191, 168, 0.4)"
+                  strokeWidth="1.2"
+                  initial={reduceMotion ? false : { pathLength: 0 }}
+                  whileInView={reduceMotion ? undefined : { pathLength: 1 }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{ duration: 1, ease: [0.65, 0, 0.35, 1], delay: 0.15 + i * 0.07 }}
+                />
+              </svg>
+              <div className="relative qp25-engraved text-[#f2ece3] font-black text-lg md:text-xl leading-snug">{title}</div>
+              <div className="relative text-[#d9c9b8]/85 text-sm md:text-base leading-relaxed mt-2.5">{text}</div>
             </motion.div>
           ))}
         </div>

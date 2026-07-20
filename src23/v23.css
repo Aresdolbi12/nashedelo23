@@ -436,3 +436,17 @@ button:focus-visible {
 @media (max-width: 767px), (prefers-reduced-motion: reduce) {
   .qword23-w { animation: none; }
 }
+
+
+/* ===== Тезисы v23: контурные таблички, рамка вспыхивает при наведении ===== */
+.th23 {
+  border: 1px solid rgba(217, 191, 168, 0.28);
+  border-radius: 16px;
+  background: transparent;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+.th23:hover {
+  border-color: rgba(235, 220, 207, 0.75);
+  box-shadow: 0 0 30px rgba(217, 191, 168, 0.12), inset 0 0 24px rgba(217, 191, 168, 0.05);
+  background: rgba(235, 220, 207, 0.03);
+}

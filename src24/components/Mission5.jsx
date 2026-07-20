@@ -6,12 +6,10 @@ const EASE = [0.19, 1, 0.22, 1]
 /* Суть двух абзацев миссии, разложенная тезисами по табличкам
    с подсветкой границ при наведении (frame15:hover) */
 const THESES = [
-  ['Системные знания', 'От оценки рыночных возможностей до устойчивой модели доходов'],
-  ['Очные интенсивы', 'Два дня живой практики в вашем городе'],
-  ['Вебинары и консультации', 'Индивидуальная работа с экспертами программы'],
-  ['Маркетинг и финучёт', 'Базовые инструменты самостоятельного ведения бизнеса'],
-  ['Диалог с государством', 'Взаимодействие с госструктурами без посредников'],
-  ['Инструменты поддержки', 'Льготы, гранты и субсидии для своего дела'],
+  ['Системные знания', 'Самостоятельное ведение бизнеса: от оценки рынка до устойчивой модели доходов'],
+  ['Очные интенсивы', 'Основа программы — живая практика в семи городах края'],
+  ['Вебинары и консультации', 'Онлайн-занятия и индивидуальная работа с экспертами'],
+  ['Маркетинг, финучёт, господдержка', 'Прикладные темы, включая работу с госструктурами'],
 ]
 
 const RESULTS = [
@@ -33,18 +31,21 @@ export default function Mission5() {
   return (
     <section id="about" className="relative px-6 lg:px-10 py-24 md:py-32">
       <div className="max-w-6xl mx-auto">
-        {/* Тезисы-таблички */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        {/* Тезисы v24: заводские бирки с номерами, впечатываются ударом */}
+        <div className="grid sm:grid-cols-2 gap-4 md:gap-5">
           {THESES.map(([title, text], i) => (
             <motion.div
               key={title}
-              className="frame15 p-6 md:p-7"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              className="th24 relative p-6 md:p-7"
+              initial={{ opacity: 0, scale: 1.1, y: -8 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, ease: EASE, delay: i * 0.06 }}
+              transition={{ duration: 0.35, ease: [0.25, 0, 0.2, 1], delay: i * 0.09 }}
             >
-              <div className="text-[#f2ece3] font-black text-lg md:text-xl leading-snug">{title}</div>
+              <span className="th24-num absolute top-5 right-6 font-black text-sm tracking-widest" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div className="text-[#f2ece3] font-black text-lg md:text-xl leading-snug pr-10">{title}</div>
               <div className="text-[#d9c9b8]/85 text-sm md:text-base leading-relaxed mt-2.5">{text}</div>
             </motion.div>
           ))}
