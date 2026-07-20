@@ -1,5 +1,5 @@
 import Bg22 from './components/Bg22.jsx'
-import QuotePlaques15 from './components/QuotePlaques15.jsx'
+import Quotes23 from './components/Quotes23.jsx'
 import Intro5 from './components/Intro5.jsx'
 import Nav5 from './components/Nav5.jsx'
 import Hero22 from './components/Hero22.jsx'
@@ -18,7 +18,7 @@ export default function App() {
     <div className="grain3 relative">
       <Bg22 />
       {/* Таблички-цитаты живут на фоне (отрицательный z-index), скролл не удлиняют */}
-      <QuotePlaques15 offset={1} />
+      <Quotes23 />
       <Intro5 />
       <Nav5 />
       <main>

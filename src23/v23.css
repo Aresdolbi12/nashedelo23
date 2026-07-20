@@ -408,35 +408,10 @@ button:focus-visible {
 }
 
 
-/* ===== Плашки-цитаты: тёплый беж вместо металла ===== */
-.qplaque22 {
-  background: linear-gradient(165deg, #f4ecdf 0%, #ebdccf 55%, #e3d0bd 100%);
-  border: 1px solid rgba(197, 139, 104, 0.45);
-  border-radius: 18px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.65),
-    0 0 0 1px rgba(197, 139, 104, 0.08),
-    0 18px 38px -18px rgba(0, 0, 0, 0.5);
-}
-
-/* Ambient-дрейф плашки: медленное «дыхание» на фоне */
-.qdrift22 {
-  animation: qdrift22 9s ease-in-out infinite;
-  will-change: transform;
-}
-@keyframes qdrift22 {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-7px); }
-}
-@media (max-width: 767px), (prefers-reduced-motion: reduce) {
-  .qdrift22 { animation: none; }
-}
-
-
 /* ===== v23: волна блеска по буквам логотипа ===== */
 .letter23 {
   animation: letter23 5.5s ease-in-out infinite;
-  animation-delay: var(--ld, 0s);
+  animation-delay: calc(2.6s + var(--ld, 0s));
 }
 @keyframes letter23 {
   0%, 68%, 100% { filter: brightness(1); }
@@ -445,4 +420,19 @@ button:focus-visible {
 }
 @media (max-width: 767px), (prefers-reduced-motion: reduce) {
   .letter23 { animation: none; }
+}
+
+
+/* ===== Цитаты v23: чистая типографика, волна блеска по словам ===== */
+.qword23-w {
+  animation: qwave23 7s linear infinite;
+  animation-delay: calc(2.4s + var(--ld, 0s));
+}
+@keyframes qwave23 {
+  0%, 88%, 100% { filter: brightness(1); }
+  92% { filter: brightness(1.5); }
+  96% { filter: brightness(1); }
+}
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .qword23-w { animation: none; }
 }

@@ -40,8 +40,8 @@ export default function Star22({ draw = false }) {
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: [0, 1, 1, 0.35] }}
             transition={{
-              pathLength: { duration: 2.4, ease: 'easeInOut', delay: 0.7 },
-              opacity: { duration: 3.4, times: [0, 0.15, 0.8, 1], delay: 0.7 },
+              pathLength: { duration: 2.4, ease: 'easeInOut', delay: 1.0 },
+              opacity: { duration: 3.4, times: [0, 0.15, 0.8, 1], delay: 1.0 },
             }}
           />
           {/* Мягкая пульсация после отрисовки */}
@@ -52,7 +52,7 @@ export default function Star22({ draw = false }) {
             strokeLinejoin="round"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.35, 0.1, 0.35] }}
-            transition={{ delay: 3.4, duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ delay: 3.7, duration: 7, repeat: Infinity, ease: 'easeInOut' }}
           />
         </>
       )}

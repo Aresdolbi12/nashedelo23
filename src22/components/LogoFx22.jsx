@@ -16,8 +16,8 @@ export default function LogoFx22() {
   const my = useMotionValue(0)
   const sx = useSpring(mx, { stiffness: 60, damping: 16 })
   const sy = useSpring(my, { stiffness: 60, damping: 16 })
-  const rotY = useTransform(sx, [-1, 1], [-7, 7])
-  const rotX = useTransform(sy, [-1, 1], [5, -5])
+  const rotY = useTransform(sx, [-1, 1], [-10, 10])
+  const rotX = useTransform(sy, [-1, 1], [7, -7])
   const lightPos = useTransform(sx, [-1, 1], ['130% 0%', '-130% 0%'])
 
   const onMove = useCallback((e) => {

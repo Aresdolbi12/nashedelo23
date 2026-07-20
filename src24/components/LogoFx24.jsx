@@ -6,12 +6,12 @@ import Logo15 from './Logo15.jsx'
    и разлёт искр. Индустриальный характер конструкции Форума. */
 const SPARKS = Array.from({ length: 12 }, (_, i) => {
   const a = (i / 12) * Math.PI * 2
-  const dist = 90 + (i % 3) * 55
+  const dist = 110 + (i % 3) * 62
   return {
     x: Math.cos(a) * dist,
     y: Math.sin(a) * dist * 0.55,
     size: 3 + (i % 3),
-    delay: 0.94 + (i % 4) * 0.015,
+    delay: 1.44 + (i % 4) * 0.015,
   }
 })
 
@@ -23,14 +23,14 @@ export default function LogoFx24() {
     <motion.span
       className="relative inline-block"
       animate={{ x: [0, 0, -3, 3, -2, 0] }}
-      transition={{ duration: 0.4, delay: 0.95, times: [0, 0.01, 0.3, 0.55, 0.8, 1] }}
+      transition={{ duration: 0.4, delay: 1.45, times: [0, 0.01, 0.3, 0.55, 0.8, 1] }}
     >
       {/* Пресс: падение из глубины */}
       <motion.span
         className="inline-block"
-        initial={{ opacity: 0, scale: 1.7, filter: 'blur(16px)' }}
+        initial={{ opacity: 0, scale: 2.05, filter: 'blur(20px)' }}
         animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-        transition={{ duration: 0.55, ease: [0.3, 0, 0.25, 1], delay: 0.45 }}
+        transition={{ duration: 0.55, ease: [0.3, 0, 0.25, 1], delay: 0.95 }}
       >
         <Logo15 size="poster" shine />
       </motion.span>
@@ -40,8 +40,8 @@ export default function LogoFx24() {
         className="absolute inset-[-18%] pointer-events-none"
         style={{ background: 'radial-gradient(ellipse at center, rgba(246,239,230,0.55), transparent 65%)' }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 0.9, 0] }}
-        transition={{ duration: 0.5, delay: 0.93, times: [0, 0.25, 1] }}
+        animate={{ opacity: [0, 1, 0] }}
+        transition={{ duration: 0.5, delay: 1.43, times: [0, 0.25, 1] }}
         aria-hidden="true"
       />
 

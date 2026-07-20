@@ -416,31 +416,6 @@ main > section + section {
 }
 
 
-/* ===== Плашки-цитаты: тёплый беж вместо металла ===== */
-.qplaque22 {
-  background: linear-gradient(165deg, #f4ecdf 0%, #ebdccf 55%, #e3d0bd 100%);
-  border: 1px solid rgba(197, 139, 104, 0.45);
-  border-radius: 18px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.65),
-    0 0 0 1px rgba(197, 139, 104, 0.08),
-    0 18px 38px -18px rgba(0, 0, 0, 0.5);
-}
-
-/* Ambient-дрейф плашки: медленное «дыхание» на фоне */
-.qdrift22 {
-  animation: qdrift22 9s ease-in-out infinite;
-  will-change: transform;
-}
-@keyframes qdrift22 {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-7px); }
-}
-@media (max-width: 767px), (prefers-reduced-motion: reduce) {
-  .qdrift22 { animation: none; }
-}
-
-
 /* ===== v25: гравировка лучом ===== */
 .logo25-outline {
   font-family: 'Unbounded', 'Geologica', sans-serif;
@@ -451,7 +426,7 @@ main > section + section {
   -webkit-text-stroke: 1.5px rgba(174, 185, 196, 0.5);
 }
 .logo25-clip {
-  animation: clip25 1.7s cubic-bezier(0.65, 0, 0.35, 1) 0.75s both;
+  animation: clip25 1.7s cubic-bezier(0.65, 0, 0.35, 1) 1.1s both;
 }
 @keyframes clip25 {
   from { clip-path: inset(-8% 100% -8% 0); }
@@ -467,7 +442,7 @@ main > section + section {
   background: linear-gradient(180deg, transparent, #f6efe6 30%, #fff 50%, #f6efe6 70%, transparent);
   box-shadow: 0 0 18px 5px rgba(246, 239, 230, 0.5);
   opacity: 0;
-  animation: beam25 1.7s cubic-bezier(0.65, 0, 0.35, 1) 0.75s both;
+  animation: beam25 1.7s cubic-bezier(0.65, 0, 0.35, 1) 1.1s both;
   pointer-events: none;
 }
 @keyframes beam25 {
@@ -479,11 +454,57 @@ main > section + section {
 /* Штатный блик включается после гравировки */
 .logo25-after {
   opacity: 0;
-  animation: after25 0.1s linear 2.5s both;
+  animation: after25 0.1s linear 2.85s both;
 }
 @keyframes after25 { to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .logo25-clip, .logo25-beam, .logo25-after { animation: none; }
   .logo25-clip { clip-path: none; }
   .logo25-after { opacity: 1; }
+}
+
+
+/* ===== Цитаты v25: гравированная плита, луч проявляет текст ===== */
+.qp25 {
+  background: rgba(13, 47, 34, 0.55);
+  border-radius: 14px;
+  box-shadow: 0 16px 36px -20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+.qp25-engraved {
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55), 0 -1px 0 rgba(255, 255, 255, 0.07);
+}
+.qp25-reveal {
+  clip-path: inset(-6% 100% -6% 0);
+}
+.qp25-reveal.run {
+  animation: qp25clip 1.15s cubic-bezier(0.65, 0, 0.35, 1) 0.45s both;
+}
+@keyframes qp25clip {
+  from { clip-path: inset(-6% 100% -6% 0); }
+  to { clip-path: inset(-6% 0% -6% 0); }
+}
+.qp25-beam {
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  left: 4px;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, transparent, #f6ead8 40%, #fff 50%, #f6ead8 60%, transparent);
+  box-shadow: 0 0 14px 3px rgba(246, 234, 216, 0.4);
+  opacity: 0;
+  pointer-events: none;
+}
+.qp25-beam.run {
+  animation: qp25beam 1.15s cubic-bezier(0.65, 0, 0.35, 1) 0.45s both;
+}
+@keyframes qp25beam {
+  0% { left: 4px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: calc(100% - 7px); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qp25-reveal { clip-path: none !important; animation: none !important; }
+  .qp25-beam { display: none; }
 }

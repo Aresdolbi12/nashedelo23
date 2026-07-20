@@ -10,7 +10,7 @@ export default function Intro5() {
   useEffect(() => {
     document.getElementById('boot')?.remove()
     // Короткая пауза, чтобы hero успел смонтироваться и отрисоваться под вуалью
-    const t = setTimeout(() => setShow(false), 350)
+    const t = setTimeout(() => setShow(false), 200)
     return () => clearTimeout(t)
   }, [])
 
@@ -22,7 +22,7 @@ export default function Intro5() {
           style={{ background: 'linear-gradient(180deg, #1b5540 0%, #0d2f22 100%)' }}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1.1, ease: 'easeInOut' }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
           aria-hidden="true"
         />
       )}

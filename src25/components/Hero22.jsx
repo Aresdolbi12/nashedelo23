@@ -92,9 +92,9 @@ export default function Hero22({ starDraw = false }) {
         <div className="max-w-6xl mx-auto w-full px-6 lg:px-10 text-center">
           <motion.div
             className="relative inline-block"
-            initial={{ opacity: 0, y: 30, scale: 0.94, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-            transition={{ duration: 1, ease: EASE, delay: 0.55 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.45, delay: 0.2 }}
           >
             <div className="logo-drift11 relative drop-shadow-[0_18px_45px_rgba(0,0,0,0.55)]">
               <h1 className="sr-only">Наше дело</h1>
