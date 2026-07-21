@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Наше дело. Образовательная бизнес-программа для ветеранов боевых действий, участников СВО и членов их семей." />
+    <title>Наше дело — образовательная бизнес-программа</title>
+    <!-- Превью ссылки в мессенджерах и соцсетях -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Наше дело — образовательная бизнес-программа" />
+    <meta property="og:description" content="Наше дело. Образовательная бизнес-программа для ветеранов боевых действий, участников СВО и членов их семей." />
+    <meta name="twitter:card" content="summary" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800;900&family=Unbounded:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Мгновенный экран загрузки: тихая заливка в цвет фона, рисуется до
+         подхвата JS и плавно растворяется React'ом (Intro). Никаких точек и
+         логотипов — сайт просто мягко проявляется.
+         Фон body НЕ задаём: фон (Bg) лежит на z-index:-10 и непрозрачный
+         body его перекрыл бы. Пустой экран до JS закрывает #boot своим фоном. */
+      #boot {
+        position: fixed; inset: 0; z-index: 200;
+        background: linear-gradient(180deg, #1b5540 0%, #0d2f22 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="boot" aria-hidden="true"></div>
+    <div id="root"></div>
+    <script type="module" src="/src31/main.jsx"></script>
+  </body>
+</html>
