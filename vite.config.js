@@ -43,6 +43,7 @@ export default defineConfig({
         v29: resolve(__dirname, '29/index.html'),
         v30: resolve(__dirname, '30/index.html'),
         v31: resolve(__dirname, '31/index.html'),
+        v32: resolve(__dirname, '32/index.html'),
       },
     },
   },
