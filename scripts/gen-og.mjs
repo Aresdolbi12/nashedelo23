@@ -1,46 +1,68 @@
-// Генерация OG-превью (1200×630) для нашедело23.рф: фирменный зелёный фон,
-// контур звезды как в hero, металлический логотип «НАШЕ ДЕЛО» и подпись.
-// Запуск: node scripts/gen-og.mjs   → public-regru/og.jpg
+// Генерация OG-превью (1200×630) для нашедело23.рф.
+//
+// Картинка — реальный первый экран сайта, снятый headless-хромом с уже
+// собранного dist-regru/index.html (логотип рисуется в HTML/CSS, поэтому
+// рисовать превью отдельно из старого webp нельзя — разъедется с сайтом).
+//
+// Порядок: npm run build:regru → npm run og
+// Результат: public-regru/og.jpg (его подхватит следующий build:regru)
+
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { mkdirSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
+import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
 import sharp from 'sharp'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const W = 1200
 const H = 630
 
-// Пятиконечная звезда контуром — тот же мотив, что на первом экране сайта
-const star = (cx, cy, r) =>
-  Array.from({ length: 5 }, (_, i) => {
-    const a = (Math.PI / 180) * (-90 + i * 144)
-    return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`
-  }).join(' ')
+const CHROME = [
+  'C:/Program Files/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+].find(existsSync)
+if (!CHROME) throw new Error('Не найден Chrome/Edge для рендера OG-картинки')
 
-const bg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1b5540"/>
-      <stop offset="100%" stop-color="#0d2f22"/>
-    </linearGradient>
-  </defs>
-  <rect width="${W}" height="${H}" fill="url(#g)"/>
-  <polygon points="${star(600, 300, 340)}" fill="none" stroke="#ffffff" stroke-opacity="0.10" stroke-width="2"/>
-  <text x="600" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="30"
-        font-weight="700" letter-spacing="4" fill="#e8ded0">ОБРАЗОВАТЕЛЬНАЯ БИЗНЕС-ПРОГРАММА</text>
-  <text x="600" y="588" text-anchor="middle" font-family="Arial, sans-serif" font-size="23"
-        fill="#e8ded0" fill-opacity="0.72">для ветеранов боевых действий, участников СВО и членов их семей</text>
-</svg>`)
+const built = resolve(root, 'dist-regru/index.html')
+if (!existsSync(built)) throw new Error('Сначала собери сайт: npm run build:regru')
 
-const LOGO_W = 560
-const logo = await sharp(resolve(root, 'src33/assets/logo-nashe-delo.webp'))
-  .resize({ width: LOGO_W, fit: 'inside' })
-  .toBuffer()
+// Копия сборки без плавающих элементов: навигация, липкая CTA и интро-вуаль
+// в карточке превью только мешают.
+const shot = resolve(root, 'dist-regru/_og.html')
+const png = resolve(root, 'dist-regru/_og.png')
+// Блоки hero проявляются анимацией с задержкой 1.0–1.3 с, а виртуальное время
+// headless-хрома до них не доходит (rAF под ним почти не двигается) — поэтому
+// элементы, которые framer оставил на inline opacity: 0, открываем сами.
+const hide = `<style>
+  nav, [class*="z-[100]"], .fixed.bottom-4, #boot { display: none !important; }
+  section#top { padding-top: 2.5rem !important; }
+  section#top [style*="opacity: 0"] { opacity: 1 !important; transform: none !important; }
+  /* таймер обратного отсчёта в карточке не нужен — он устаревает и режется краем */
+  section#top [class*="gap-2.5"] { display: none !important; }
+</style>`
+writeFileSync(shot, readFileSync(built, 'utf8').replace('</head>', `${hide}</head>`))
+
+execFileSync(CHROME, [
+  '--headless=new',
+  '--disable-gpu',
+  '--hide-scrollbars',
+  `--window-size=${W},${H}`,
+  '--force-device-scale-factor=2', // снимаем в 2× и ужимаем — текст резче
+  // компоненты уважают prefers-reduced-motion, поэтому в этом режиме
+  // анимация входа сразу в финальном состоянии — не поймаем середину
+  '--force-prefers-reduced-motion',
+  '--virtual-time-budget=20000', // дождаться шрифтов Google
+  `--screenshot=${png}`,
+  `file:///${shot.replace(/\\/g, '/')}`,
+], { stdio: 'ignore' })
 
 mkdirSync(resolve(root, 'public-regru'), { recursive: true })
-await sharp(bg)
-  .composite([{ input: logo, left: Math.round((W - LOGO_W) / 2), top: 55 }])
+await sharp(png)
+  .resize(W, H, { fit: 'cover' })
   .jpeg({ quality: 88, chromaSubsampling: '4:4:4' })
   .toFile(resolve(root, 'public-regru/og.jpg'))
 
+rmSync(shot, { force: true })
+rmSync(png, { force: true })
 console.log('OK: public-regru/og.jpg')
