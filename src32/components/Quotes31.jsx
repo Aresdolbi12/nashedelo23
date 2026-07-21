@@ -5,10 +5,10 @@ import { QUOTES } from '../content.js'
 const EASE = [0.65, 0, 0.35, 1]
 const OUT = [0.16, 1, 0.3, 1]
 const ANCHORS = [
-  { after: 'about', side: 'right', q: 9, art: 'path' },
-  { after: 'schedule', side: 'left', q: 10, art: 'builder' },
-  { after: 'speakers', side: 'right', q: 11, art: 'loop' },
-  { after: 'faq', side: 'left', q: 0, art: 'spiral' },
+  { after: 'about', side: 'right', q: 9, art: 'wrapray' },
+  { after: 'schedule', side: 'left', q: 10, art: 'wrapburst' },
+  { after: 'speakers', side: 'right', q: 11, art: 'wave' },
+  { after: 'faq', side: 'left', q: 0, art: 'star' },
 ]
 
 function useAnchorTops() {
@@ -29,112 +29,118 @@ function useAnchorTops() {
   return tops
 }
 
-/* Тонкие металлические линии-акценты (1.5px, светлый металлик).
-   Живут на кромке карточки (svg с полем 20px вокруг плиты, текст внутри
-   плиты отступает от кромки ещё на ~30px — ближе 20px к тексту не подходят).
-   Рисуются, когда карточка в зоне видимости; ~0.8–1s, ease-out. */
+/* Тонкие металлические линии-акценты (1.6px, светлый металлик в тон логотипа).
+   svg с полем 20px вокруг плиты; текст внутри плиты отступает от кромки
+   ещё на ~30px — ближе 15–20px к тексту линии не подходят.
+   Триггер — появление карточки, рисование ~1s, плавное. */
 const STROKE = 'rgba(206, 212, 221, 0.6)'
 
-/* 1. «Путь»: линия из левого нижнего угла дугой вдоль кромки вверх и за
-   правый верхний угол; следом проявляется пунктирный след. */
-function ArtPath({ run }) {
-  const d = 'M 6 254 Q -4 130 40 32 Q 58 4 108 4 H 476'
+function ArtSvg({ children }) {
   return (
-    <svg className="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none" viewBox="0 0 470 250" preserveAspectRatio="none" fill="none" aria-hidden="true">
-      <path d={d} stroke={STROKE} strokeWidth="1.5" strokeDasharray="2 7" vectorEffect="non-scaling-stroke" opacity="0" style={{ opacity: run ? 0.45 : 0, transition: 'opacity 0.7s 0.9s' }} />
-      <motion.path
-        d={d}
-        stroke={STROKE}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={run ? { pathLength: 1, opacity: [0, 1, 1, 0.25] } : { pathLength: 0, opacity: 0 }}
-        transition={{ pathLength: { duration: 1, ease: OUT, delay: 0.5 }, opacity: { duration: 1.8, times: [0, 0.2, 0.7, 1], delay: 0.5 } }}
-      />
+    <svg
+      className="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none overflow-visible"
+      viewBox="0 0 470 250"
+      preserveAspectRatio="none"
+      fill="none"
+      aria-hidden="true"
+    >
+      {children}
     </svg>
   )
 }
 
-/* 2. «Конструктор»: штрихи выезжают из центра каждой стороны и замирают,
-   не соединяясь в рамку. */
-function ArtBuilder({ run }) {
-  const segs = [
-    { x1: 235, y1: 8, x2: 235, y2: 8, tx1: 185, tx2: 285, ty1: 8, ty2: 8, delay: 0.5 },
-    { x1: 462, y1: 125, x2: 462, y2: 125, tx1: 462, tx2: 462, ty1: 83, ty2: 167, delay: 0.62 },
-    { x1: 235, y1: 242, x2: 235, y2: 242, tx1: 285, tx2: 185, ty1: 242, ty2: 242, delay: 0.74 },
-    { x1: 8, y1: 125, x2: 8, y2: 125, tx1: 8, tx2: 8, ty1: 167, ty2: 83, delay: 0.86 },
-  ]
+/* 1. Линия из-под левого нижнего угла огибает левую и верхнюю стороны,
+   в правом верхнем углу — резкий изящный выброс-луч наружу, который тает. */
+function ArtWrapRay({ run }) {
   return (
-    <svg className="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none" viewBox="0 0 470 250" preserveAspectRatio="none" fill="none" aria-hidden="true">
-      {segs.map(({ x1, y1, x2, y2, tx1, tx2, ty1, ty2, delay }, i) => (
-        <motion.line
-          key={i}
-          stroke={STROKE}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-          initial={{ x1, y1, x2, y2, opacity: 0 }}
-          animate={run ? { x1: tx1, y1: ty1, x2: tx2, y2: ty2, opacity: 0.8 } : { x1, y1, x2, y2, opacity: 0 }}
-          transition={{ duration: 0.6, ease: OUT, delay }}
-        />
-      ))}
-    </svg>
-  )
-}
-
-/* 3. «Петля»: линия под нижней кромкой слева направо с изящным
-   завитком-росчерком по центру. */
-function ArtLoop({ run }) {
-  const d = 'M -12 246 H 168 c 26 0 32 -8 34 -16 a 12 12 0 0 0 -24 -2 c 0 16 24 18 48 18 H 482'
-  return (
-    <svg className="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none" viewBox="0 0 470 250" preserveAspectRatio="none" fill="none" aria-hidden="true">
+    <ArtSvg>
       <motion.path
-        d={d}
+        d="M 6 262 L 6 46 Q 6 6 46 6 L 432 6"
         stroke={STROKE}
-        strokeWidth="1.5"
+        strokeWidth="1.6"
         strokeLinecap="round"
         vectorEffect="non-scaling-stroke"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={run ? { pathLength: 1, opacity: 0.85 } : { pathLength: 0, opacity: 0 }}
-        transition={{ pathLength: { duration: 1, ease: OUT, delay: 0.5 }, opacity: { duration: 0.3, delay: 0.5 } }}
+        transition={{ pathLength: { duration: 0.85, ease: OUT, delay: 0.45 }, opacity: { duration: 0.25, delay: 0.45 } }}
       />
-    </svg>
-  )
-}
-
-/* 4. «Спираль»: в правом нижнем углу раскручивается наружу тонкая спираль
-   на два с половиной витка — плита будто прикручена к фону. */
-function spiralD(cx, cy) {
-  const pts = []
-  const turns = 2.4
-  const steps = 64
-  for (let i = 0; i <= steps; i++) {
-    const t = (i / steps) * turns * Math.PI * 2
-    const r = 2 + t * 1.75
-    pts.push(`${(cx + r * Math.cos(t)).toFixed(1)} ${(cy + r * Math.sin(t)).toFixed(1)}`)
-  }
-  return 'M ' + pts.join(' L ')
-}
-
-function ArtSpiral({ run }) {
-  return (
-    <svg className="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none" viewBox="0 0 470 250" preserveAspectRatio="none" fill="none" aria-hidden="true">
       <motion.path
-        d={spiralD(432, 222)}
+        d="M 432 6 L 478 -40"
         stroke={STROKE}
-        strokeWidth="1.5"
+        strokeWidth="1.6"
         strokeLinecap="round"
         vectorEffect="non-scaling-stroke"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={run ? { pathLength: 1, opacity: 0.8 } : { pathLength: 0, opacity: 0 }}
-        transition={{ pathLength: { duration: 0.95, ease: OUT, delay: 0.5 }, opacity: { duration: 0.3, delay: 0.5 } }}
+        animate={run ? { pathLength: 1, opacity: [0, 1, 1, 0] } : { pathLength: 0, opacity: 0 }}
+        transition={{
+          pathLength: { duration: 0.3, ease: 'easeOut', delay: 1.25 },
+          opacity: { duration: 1.1, times: [0, 0.25, 0.55, 1], delay: 1.25 },
+        }}
       />
-    </svg>
+    </ArtSvg>
   )
 }
 
-const ARTS = { path: ArtPath, builder: ArtBuilder, loop: ArtLoop, spiral: ArtSpiral }
+/* 2. Линия стартует сверху, огибает правую и нижнюю стороны,
+   в левом нижнем углу — выброс вниз-влево за край карточки. */
+function ArtWrapBurst({ run }) {
+  return (
+    <ArtSvg>
+      <motion.path
+        d="M 446 -16 Q 464 8 464 44 L 464 200 Q 464 244 424 244 L 44 244 L -32 290"
+        stroke={STROKE}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={run ? { pathLength: 1, opacity: 0.85 } : { pathLength: 0, opacity: 0 }}
+        transition={{ pathLength: { duration: 1.05, ease: OUT, delay: 0.45 }, opacity: { duration: 0.25, delay: 0.45 } }}
+      />
+    </ArtSvg>
+  )
+}
+
+/* 3. Линия параллельно правой стороне с мягкой волной; в средней части —
+   чёткий звёздный пик вправо, дальше движение до нижнего угла. */
+function ArtWave({ run }) {
+  return (
+    <ArtSvg>
+      <motion.path
+        d="M 462 2 Q 452 32 462 60 Q 470 86 460 102 L 488 118 L 461 134 Q 452 162 462 192 Q 470 220 456 250"
+        stroke={STROKE}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={run ? { pathLength: 1, opacity: 0.85 } : { pathLength: 0, opacity: 0 }}
+        transition={{ pathLength: { duration: 1, ease: OUT, delay: 0.45 }, opacity: { duration: 0.25, delay: 0.45 } }}
+      />
+    </ArtSvg>
+  )
+}
+
+/* 4. Упрощённый контур пятиконечной звезды в правом нижнем углу —
+   прорисовывается по контуру, с мягким замедлением; прямой, но
+   ненавязчивый символ мужества и перехода к мирному созиданию. */
+function ArtStar({ run }) {
+  return (
+    <ArtSvg>
+      <motion.path
+        d="M 430.0 190.0 L 435.8 208.0 L 454.7 208.0 L 439.4 219.1 L 445.3 237.0 L 430.0 225.9 L 414.7 237.0 L 420.6 219.1 L 405.3 208.0 L 424.2 208.0 Z"
+        stroke={STROKE}
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={run ? { pathLength: 1, opacity: 0.8 } : { pathLength: 0, opacity: 0 }}
+        transition={{ pathLength: { duration: 1.15, ease: 'easeInOut', delay: 0.45 }, opacity: { duration: 0.25, delay: 0.45 } }}
+      />
+    </ArtSvg>
+  )
+}
+
+const ARTS = { wrapray: ArtWrapRay, wrapburst: ArtWrapBurst, wave: ArtWave, star: ArtStar }
 
 /* Гравированная плита v25 + своя линия-акцент у каждой карточки */
 function Plate({ quote, art, reduceMotion }) {
@@ -181,8 +187,8 @@ function Plate({ quote, art, reduceMotion }) {
   )
 }
 
-/* Цитаты v32: плиты v25, у каждой карточки своя тонкая линия-акцент —
-   «Путь», «Конструктор», «Петля», «Спираль» (ТЗ заказчика 21.07). */
+/* Цитаты v32 (ред. 2): плиты v25, у каждой карточки своя линия —
+   обход с лучом, обход с выбросом, волна со звёздным пиком, звезда. */
 export default function Quotes31() {
   const reduceMotion = useReducedMotion()
   const tops = useAnchorTops()
