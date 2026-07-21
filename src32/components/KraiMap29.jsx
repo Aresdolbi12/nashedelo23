@@ -1,27 +1,18 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { SCHEDULE } from '../content.js'
+import { VIEWBOX, BORDER_D, ADYGEA_D, DISTRICT_DS, ROUTE_D, CITY_XY } from '../kraiGeo.js'
 
 const EASE = [0.19, 1, 0.22, 1]
-const OUTLINE = 'M 330 87 L 378 76 L 590 53 Q 700 100 743 178 L 794 246 Q 850 310 879 394 Q 860 480 794 543 Q 790 640 777 725 Q 720 800 624 838 Q 540 750 466 679 Q 380 625 298 577 L 249 538 Q 210 515 166 497 Q 90 470 47 429 Q 100 400 149 394 Q 210 360 268 315 L 314 235 Q 300 190 293 144 Q 310 110 330 87 Z'
 
-/* Координаты городов на стилизованной карте (в порядке SCHEDULE) */
-const COORDS = {
-  'Белореченск': [602, 527],
-  'Армавир': [816, 476],
-  'Ейск': [335, 100],
-  'Новороссийск': [249, 538],
-  'Сочи': [598, 786],
-  'Тимашевск': [444, 333],
-  'Краснодар': [451, 467],
-}
-
-const ROUTE = SCHEDULE.map(({ city }) => COORDS[city])
-const ROUTE_D = 'M ' + ROUTE.map(([x, y]) => `${x} ${y}`).join(' L ')
-
-/* География v29: стилизованная карта края. Контур рисуется штрихом,
-   затем прочерчивается маршрут программы через семь городов;
-   наведение на строку города подсвечивает его точку на карте. */
+/* География v32: точная карта Краснодарского края (geoBoundaries ADM1/ADM2).
+   Реальные полигоны границы, 41 района и Адыгеи-анклава,
+   города — по реальным координатам (Web Mercator),
+   маршрут программы — по реальным трассам через реальные станицы
+   (Ханская—Майкоп—Лабинск, Тихорецк—Павловская—Староминская,
+   Каневская—Славянск—Крымск, серпантин А-147, М-4 через Горячий Ключ).
+   Последовательность: рисуется граница → проявляются районы →
+   прочерчивается маршрут → зажигаются города. */
 export default function KraiMap29() {
   const [active, setActive] = useState(null)
 
@@ -50,69 +41,119 @@ export default function KraiMap29() {
           Возможность выбрать площадку, до которой удобно добраться
         </motion.p>
 
-        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-14 items-center">
+        <div className="grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-center">
           {/* Карта */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.97 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.9, ease: EASE }}
           >
-            <svg viewBox="10 20 950 850" fill="none" className="w-full h-auto" role="img" aria-label="Стилизованная карта Краснодарского края с городами программы">
-              <g>
-                {/* Контур края: рисуется штрихом */}
-                <motion.path
-                  d={OUTLINE}
-                  stroke="rgba(217, 191, 168, 0.55)"
-                  strokeWidth="2.5"
-                  strokeLinejoin="round"
-                  fill="rgba(20, 58, 44, 0.35)"
-                  initial={{ pathLength: 0, fillOpacity: 0 }}
-                  whileInView={{ pathLength: 1, fillOpacity: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ pathLength: { duration: 2, ease: 'easeInOut' }, fillOpacity: { duration: 1, delay: 1.6 } }}
-                />
-                {/* Маршрут программы по датам */}
-                <motion.path
-                  d={ROUTE_D}
-                  stroke="#e04e39"
-                  strokeWidth="2.5"
-                  strokeDasharray="7 7"
-                  strokeLinecap="round"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  whileInView={{ pathLength: 1, opacity: 0.85 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ pathLength: { duration: 2.2, ease: 'easeInOut', delay: 1.9 }, opacity: { duration: 0.4, delay: 1.9 } }}
-                />
-                {/* Города */}
-                {SCHEDULE.map(({ city }, i) => {
-                  const [x, y] = ROUTE[i]
-                  const on = active === i
-                  return (
-                    <motion.g
-                      key={city}
-                      initial={{ opacity: 0, scale: 0 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true, margin: '-100px' }}
-                      transition={{ duration: 0.45, ease: EASE, delay: 2 + i * 0.28 }}
-                      style={{ transformOrigin: `${x}px ${y}px` }}
+            <svg
+              viewBox={VIEWBOX}
+              fill="none"
+              className="w-full h-auto"
+              role="img"
+              aria-label="Карта Краснодарского края с районами и маршрутом программы по семи городам"
+            >
+              {/* Районы края: административные границы */}
+              <motion.g
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 1.2, delay: 1.4 }}
+              >
+                {DISTRICT_DS.map((dd, i) => (
+                  <path
+                    key={i}
+                    d={dd}
+                    fill="rgba(20, 58, 44, 0.42)"
+                    stroke="rgba(217, 191, 168, 0.17)"
+                    strokeWidth="0.5"
+                    strokeLinejoin="round"
+                  />
+                ))}
+              </motion.g>
+
+              {/* Адыгея — анклав внутри края: пунктирная граница */}
+              <motion.path
+                d={ADYGEA_D}
+                stroke="rgba(217, 191, 168, 0.35)"
+                strokeWidth="0.7"
+                strokeDasharray="3 3"
+                strokeLinejoin="round"
+                fill="rgba(6, 20, 14, 0.3)"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 1, delay: 1.7 }}
+              />
+
+              {/* Граница края: рисуется штрихом */}
+              <motion.path
+                d={BORDER_D}
+                stroke="rgba(217, 191, 168, 0.7)"
+                strokeWidth="1.1"
+                strokeLinejoin="round"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 2.2, ease: 'easeInOut' }}
+              />
+
+              {/* Маршрут программы по реальным трассам */}
+              <motion.path
+                d={ROUTE_D}
+                stroke="#e04e39"
+                strokeWidth="1.6"
+                strokeDasharray="3.5 3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                whileInView={{ pathLength: 1, opacity: 0.9 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ pathLength: { duration: 4.2, ease: 'easeInOut', delay: 2.1 }, opacity: { duration: 0.4, delay: 2.1 } }}
+              />
+
+              {/* Города */}
+              {SCHEDULE.map(({ city }, i) => {
+                const [x, y] = CITY_XY[city]
+                const on = active === i
+                return (
+                  <motion.g
+                    key={city}
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: '-100px' }}
+                    transition={{ duration: 0.45, ease: EASE, delay: 2.4 + i * 0.5 }}
+                    style={{ transformOrigin: `${x}px ${y}px` }}
+                  >
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={on ? 7 : 4.5}
+                      fill={on ? '#e04e39' : '#f2e9de'}
+                      stroke="#c58b68"
+                      strokeWidth="1.4"
+                      style={{ transition: 'all 0.25s' }}
+                    />
+                    <text
+                      x={x}
+                      y={y - 9}
+                      textAnchor="middle"
+                      fill={on ? '#f6ead8' : 'rgba(235, 220, 207, 0.8)'}
+                      fontSize={on ? 15 : 12.5}
+                      fontWeight="800"
+                      stroke="rgba(13, 47, 34, 0.85)"
+                      strokeWidth="2.5"
+                      paintOrder="stroke"
+                      style={{ fontFamily: "'Geologica', sans-serif", transition: 'all 0.25s' }}
                     >
-                      <circle cx={x} cy={y} r={on ? 15 : 9} fill={on ? '#e04e39' : '#f2e9de'} stroke="#c58b68" strokeWidth="3" style={{ transition: 'all 0.25s' }} />
-                      <text
-                        x={x}
-                        y={y - 20}
-                        textAnchor="middle"
-                        fill={on ? '#f6ead8' : 'rgba(235, 220, 207, 0.75)'}
-                        fontSize={on ? 30 : 24}
-                        fontWeight="800"
-                        style={{ fontFamily: "'Geologica', sans-serif", transition: 'all 0.25s' }}
-                      >
-                        {city}
-                      </text>
-                    </motion.g>
-                  )
-                })}
-              </g>
+                      {city}
+                    </text>
+                  </motion.g>
+                )
+              })}
             </svg>
           </motion.div>
 
