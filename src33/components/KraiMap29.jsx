@@ -8,8 +8,8 @@ const [VB_X, VB_Y, VB_W, VB_H] = VIEWBOX.split(' ').map(Number)
 
 /* Доля длины маршрута, на которой линия достигает города (замерено по ROUTE_D):
    город зажигается ровно в момент прохождения линии — порядок всегда совпадает */
-const ROUTE_DELAY = 0.9
-const ROUTE_DUR = 2
+const ROUTE_DELAY = 0.6
+const ROUTE_DUR = 1.4
 const ROUTE_FRAC = {
   Белореченск: 0,
   Армавир: 0.1,
@@ -78,7 +78,7 @@ export default function KraiMap29() {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.8, delay: 0.4 }}
+                transition={{ duration: 0.6, delay: 0.25 }}
               >
                 {DISTRICT_DS.map((dd, i) => (
                   <path
@@ -103,7 +103,7 @@ export default function KraiMap29() {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.8, delay: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
               />
 
               {/* Граница края: рисуется штрихом */}
@@ -115,7 +115,7 @@ export default function KraiMap29() {
                 initial={{ pathLength: 0 }}
                 whileInView={{ pathLength: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 1.2, ease: 'easeInOut' }}
+                transition={{ duration: 0.9, ease: 'easeInOut' }}
               />
 
               {/* Маршрут программы по реальным трассам */}
