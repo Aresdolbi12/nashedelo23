@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Наше дело. Обучающая бизнес-программа для ветеранов боевых действий, участников СВО и членов их семей." />
+    <meta name="description" content="«Наше дело» — бесплатная обучающая бизнес-программа для ветеранов боевых действий, участников СВО и членов их семей. Семь городов Краснодарского края, очные интенсивы, вебинары и консультации." />
     <title>Наше дело — обучающая бизнес-программа</title>
     <!-- Превью ссылки в мессенджерах и соцсетях.
          Домен в punycode — так его гарантированно забирают краулеры.
@@ -22,6 +22,56 @@
     <meta property="og:image:alt" content="Наше дело — обучающая бизнес-программа" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://xn--23-6kcqeb6blo9g.xn--p1ai/og.jpg" />
+    <!-- Структурированные данные: программа + FAQ (расширенный сниппет) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://xn--23-6kcqeb6blo9g.xn--p1ai/#website",
+          "url": "https://xn--23-6kcqeb6blo9g.xn--p1ai/",
+          "name": "Наше дело",
+          "inLanguage": "ru-RU"
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://moibiz93.ru/#org",
+          "name": "Фонд развития бизнеса Краснодарского края",
+          "url": "https://moibiz93.ru/"
+        },
+        {
+          "@type": "Course",
+          "name": "Наше дело — обучающая бизнес-программа",
+          "description": "Бесплатная обучающая бизнес-программа для ветеранов боевых действий, участников СВО и членов их семей: очные интенсивы в семи городах Краснодарского края, вебинары и консультации.",
+          "provider": { "@id": "https://moibiz93.ru/#org" },
+          "isAccessibleForFree": true,
+          "inLanguage": "ru-RU",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RUB" },
+          "hasCourseInstance": [
+            { "@type": "CourseInstance", "courseMode": "onsite", "startDate": "2026-09-16", "endDate": "2026-09-17", "location": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Белореченск", "addressRegion": "Краснодарский край", "addressCountry": "RU" } } },
+            { "@type": "CourseInstance", "courseMode": "onsite", "startDate": "2026-09-23", "endDate": "2026-09-24", "location": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Армавир", "addressRegion": "Краснодарский край", "addressCountry": "RU" } } },
+            { "@type": "CourseInstance", "courseMode": "onsite", "startDate": "2026-09-30", "endDate": "2026-10-01", "location": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Ейск", "addressRegion": "Краснодарский край", "addressCountry": "RU" } } },
+            { "@type": "CourseInstance", "courseMode": "onsite", "startDate": "2026-10-07", "endDate": "2026-10-08", "location": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Новороссийск", "addressRegion": "Краснодарский край", "addressCountry": "RU" } } },
+            { "@type": "CourseInstance", "courseMode": "onsite", "startDate": "2026-10-14", "endDate": "2026-10-15", "location": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Сочи", "addressRegion": "Краснодарский край", "addressCountry": "RU" } } },
+            { "@type": "CourseInstance", "courseMode": "onsite", "startDate": "2026-10-27", "endDate": "2026-10-28", "location": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Тимашевск", "addressRegion": "Краснодарский край", "addressCountry": "RU" } } },
+            { "@type": "CourseInstance", "courseMode": "onsite", "startDate": "2026-10-29", "endDate": "2026-10-30", "location": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Краснодар", "addressRegion": "Краснодарский край", "addressCountry": "RU" } } }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            { "@type": "Question", "name": "Кто может участвовать?", "acceptedAnswer": { "@type": "Answer", "text": "Ветераны боевых действий, участники СВО и члены их семей (супруг/супруга, дети старше 18 лет), зарегистрированные на территории Краснодарского края, являющиеся субъектами малого и среднего предпринимательства, или граждане, зарегистрированные на территории Краснодарского края и желающие вести бизнес." } },
+            { "@type": "Question", "name": "Могу ли я участвовать, если я ещё не зарегистрирован в качестве предпринимателя?", "acceptedAnswer": { "@type": "Answer", "text": "Да, участвовать могут ветераны боевых действий, участники СВО и члены их семей, зарегистрированные на территории Краснодарского края и желающие начать своё дело." } },
+            { "@type": "Question", "name": "Нужна ли уже готовая бизнес-идея?", "acceptedAnswer": { "@type": "Answer", "text": "Программа открыта для всех: и для тех, кто только задумывается о собственном деле, и для действующих предпринимателей, которые хотят систематизировать знания и найти новые точки роста." } },
+            { "@type": "Question", "name": "Стоимость участия", "acceptedAnswer": { "@type": "Answer", "text": "Участие в программе бесплатное!" } },
+            { "@type": "Question", "name": "Где проходят занятия?", "acceptedAnswer": { "@type": "Answer", "text": "В семи городах Краснодарского края: Белореченск, Армавир, Ейск, Новороссийск, Сочи, Тимашевск, Краснодар. Очные интенсивы проходят в каждом из этих городов, участник выбирает удобную площадку. Вебинары и консультации — дистанционно." } },
+            { "@type": "Question", "name": "Что нужно для старта?", "acceptedAnswer": { "@type": "Answer", "text": "Самое главное — желание и время на обучение. Все материалы и консультации предоставляются организаторами." } }
+          ]
+        }
+      ]
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

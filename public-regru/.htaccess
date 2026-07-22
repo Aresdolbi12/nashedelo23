@@ -1,0 +1,31 @@
+AddDefaultCharset UTF-8
+
+# HTTPS + без www (домен в punycode: нашедело23.рф)
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://xn--23-6kcqeb6blo9g.xn--p1ai%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^ https://xn--23-6kcqeb6blo9g.xn--p1ai%{REQUEST_URI} [L,R=301]
+
+# Заголовки безопасности (сайт нельзя встроить в чужой iframe и т.д.)
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# Кеширование: html перечитывается, статика живёт долго
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html "access plus 10 minutes"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+</IfModule>
+
+# Сжатие текстовых ответов
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>

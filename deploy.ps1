@@ -8,6 +8,17 @@ npm run build --prefix $root
 $dist = Join-Path $root 'dist'
 New-Item -ItemType File -Force (Join-Path $dist '.nojekyll') | Out-Null
 
+# GitHub Pages — каталог черновиков для заказчика, НЕ для поиска:
+# noindex на каждую страницу, чтобы черновики не обгоняли боевой домен.
+# Вставляется только в dist (исходники чистые — прод-сборка reg.ru индексируется).
+Get-ChildItem $dist -Recurse -Filter 'index.html' | ForEach-Object {
+    $html = Get-Content $_.FullName -Raw
+    if ($html -notmatch 'name="robots"') {
+        $html = $html -replace '<head>', "<head>`n    <meta name=`"robots`" content=`"noindex, nofollow`" />"
+        Set-Content $_.FullName $html -NoNewline
+    }
+}
+
 Push-Location $dist
 git init -b gh-pages | Out-Null
 git add -A

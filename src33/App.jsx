@@ -1,3 +1,4 @@
+import { MotionConfig } from 'framer-motion'
 import Bg22 from './components/Bg22.jsx'
 import Quotes31 from './components/Quotes31.jsx'
 import Intro5 from './components/Intro5.jsx'
@@ -15,6 +16,9 @@ import StickyCta21 from './components/StickyCta21.jsx'
 
 export default function App() {
   return (
+    /* reducedMotion="user": уважаем prefers-reduced-motion системно —
+       framer гасит transform/opacity-анимации у всех motion-компонентов */
+    <MotionConfig reducedMotion="user">
     <div className="grain3 relative">
       <Bg22 />
       {/* Таблички-цитаты живут на фоне (отрицательный z-index), скролл не удлиняют */}
@@ -34,5 +38,6 @@ export default function App() {
       <Footer5 />
       <StickyCta21 />
     </div>
+    </MotionConfig>
   )
 }

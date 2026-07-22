@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
-import { SPEAKER_ROLES } from '../../src2/content.js'
+import { SPEAKERS } from '../content.js'
 
 const EASE = [0.19, 1, 0.22, 1]
 
-/* Спикеры сеткой (конструкция «Мой Бизнес Forum»: spk-grid),
-   карточки — наши, из карусели v15 */
+/* Спикеры сеткой (конструкция «Мой Бизнес Forum»: spk-grid).
+   С 2026-07-22 — реальные ФИО из программы (content.js), не заглушки. */
 export default function Speakers5() {
   return (
     <section id="speakers" className="relative py-24 md:py-32">
@@ -23,9 +23,9 @@ export default function Speakers5() {
         </motion.h2>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
-          {SPEAKER_ROLES.map((role, i) => (
+          {SPEAKERS.map(({ name, topic, tbd }, i) => (
             <motion.div
-              key={role}
+              key={name}
               className="speaker-card3"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -41,8 +41,8 @@ export default function Speakers5() {
                   <path d="M18 100 Q 18 62 50 62 Q 82 62 82 100 Z" fill="#fff" />
                 </svg>
                 <div className="relative">
-                  <div className="text-[#d9bfa8] text-[11px] md:text-xs font-semibold tracking-wide uppercase">{role}</div>
-                  <div className="text-white font-bold text-base md:text-lg mt-1">Спикер уточняется</div>
+                  <div className="text-[#d9bfa8] text-[11px] md:text-xs font-semibold tracking-wide uppercase">{topic}</div>
+                  <div className={`font-bold text-base md:text-lg mt-1 ${tbd ? 'text-white/60' : 'text-white'}`}>{name}</div>
                 </div>
               </div>
             </motion.div>

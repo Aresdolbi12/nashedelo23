@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowIcon } from '../../src2/components/shared2.jsx'
+import { ArrowIcon } from './shared33.jsx'
 import { SCHEDULE } from '../content.js'
 import Logo15 from './Logo15.jsx'
 import LogoFx25 from './LogoFx25.jsx'

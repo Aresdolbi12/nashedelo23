@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import { Counter } from '../../src2/components/shared2.jsx'
+import { Counter } from './shared33.jsx'
 
 const EASE = [0.19, 1, 0.22, 1]
 

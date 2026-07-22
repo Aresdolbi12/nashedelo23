@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowIcon } from '../../src2/components/shared2.jsx'
+import { ArrowIcon } from './shared33.jsx'
 
 const EASE = [0.19, 1, 0.22, 1]
 
