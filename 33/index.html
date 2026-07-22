@@ -85,6 +85,24 @@
          внешних запросов к Google нет с 2026-07-22 -->
     <link rel="preload" href="../fonts/unbounded-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="../fonts/geologica-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Yandex.Metrika counter (счётчик 110942954, создан 2026-07-22).
+         Черновики на github.io отфильтровываются настройкой счётчика
+         «принимать данные только с указанных адресов». -->
+    <script type="text/javascript">
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+      ym(110942954, "init", {
+        clickmap: true,
+        trackLinks: true,
+        accurateTrackBounce: true,
+        webvisor: true
+      });
+    </script>
+    <!-- /Yandex.Metrika counter (noscript-пиксель — в начале body: div в head невалиден) -->
     <style>
       /* Мгновенный экран загрузки: тихая заливка в цвет фона, рисуется до
          подхвата JS и плавно растворяется React'ом (Intro). Никаких точек и
@@ -98,6 +116,7 @@
     </style>
   </head>
   <body>
+    <noscript><div><img src="https://mc.yandex.ru/watch/110942954" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <div id="boot" aria-hidden="true"></div>
     <div id="root"></div>
     <script type="module" src="/src33/main.jsx"></script>
