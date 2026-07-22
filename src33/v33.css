@@ -100,6 +100,20 @@ body {
   .km-route { stroke-width: 5; stroke-dasharray: 7 6; }
 }
 
+/* Появления слоёв карты: чистый CSS по классу .km-run на svg —
+   framer внутри <svg> в WebKit (iOS) молча не срабатывает */
+.km-fade { opacity: 0; transition: opacity 0.6s ease; }
+.km-run .km-districts { opacity: 1; transition-delay: 0.25s; }
+.km-run .km-adygea { opacity: 1; transition-delay: 0.4s; }
+.km-run .km-route { opacity: 0.9; transition: opacity 0.3s linear 0.6s; }
+.km-city { opacity: 0; transition: opacity 0.45s ease; }
+.km-run .km-city { opacity: 1; }
+.km-label { opacity: 0; transition: opacity 0.5s ease; }
+.km-label-on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .km-fade, .km-city, .km-label { transition: none; }
+}
+
 section[id] {
   scroll-margin-top: 96px;
 }

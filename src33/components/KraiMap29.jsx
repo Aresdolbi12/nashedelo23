@@ -35,17 +35,17 @@ function useMobile() {
 }
 
 /* География v32: точная карта Краснодарского края (geoBoundaries ADM1/ADM2).
-   Реальные полигоны границы, 41 района и Адыгеи-анклава,
-   города — по реальным координатам (Web Mercator),
-   маршрут программы — по реальным трассам.
 
-   Рисование линий — НЕ через framer pathLength: у WebKit (весь iOS) атрибут
-   pathLength игнорируется в расчёте stroke-dasharray, и на iPhone карта
-   не прорисовывалась вовсе. Вместо этого классика: реальная длина через
-   getTotalLength() + анимация stroke-dashoffset в юнитах пути. Пунктир
-   маршрута сохраняем маской: рисуется сплошная маска поверх пунктирного пути.
-   Толщины — в юнитах viewBox, на телефоне крупнее через media в v33.css
-   (vector-effect не используем — у него свои WebKit-баги с dasharray). */
+   ЖЕЛЕЗНЫЕ ПРАВИЛА ЭТОГО КОМПОНЕНТА (выстраданы на реальном iPhone):
+   - внутри <svg> НЕТ framer-элементов: whileInView/pathLength на SVG-детях
+     в WebKit молча не срабатывают — всё управляется одним состоянием run
+     с onViewportEnter HTML-обёртки (это работает везде);
+   - линии рисуются техникой getTotalLength() + stroke-dashoffset;
+   - пунктир маршрута открывается маской, оффсет маски двигает rAF-цикл
+     из JS (CSS-transition внутри <mask> WebKit не перерисовывает),
+     по завершении маска СНИМАЕТСЯ — конечное состояние от неё не зависит;
+   - появления (районы, Адыгея, маршрут, города) — чистые CSS-transition
+     по классу .km-run на svg, задержки в CSS/inline. */
 export default function KraiMap29() {
   const [active, setActive] = useState(null)
   const [run, setRun] = useState(false)
@@ -53,10 +53,9 @@ export default function KraiMap29() {
 
   const borderRef = useRef(null)
   const routeMaskRef = useRef(null)
+  const routeRef = useRef(null)
 
-  /* До входа в вьюпорт: спрятать линии их же штрихом (offset = длина).
-     Императивно, без state: framer у motion-элементов владеет style,
-     а нам нужны свои значения на обычных path. */
+  /* До старта: линии спрятаны собственным штрихом (offset = длина) */
   useLayoutEffect(() => {
     for (const ref of [borderRef, routeMaskRef]) {
       const el = ref.current
@@ -67,35 +66,44 @@ export default function KraiMap29() {
     }
   }, [])
 
-  /* Вход в вьюпорт: CSS-transition дорисовывает штрих до конца.
-     stroke-dashoffset в юнитах пути — WebKit-совместимо (в отличие от
-     framer pathLength, который iOS игнорирует в расчёте dasharray). */
   useEffect(() => {
     if (!run) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const draw = (el, dur, delay, ease) => {
-      if (!el) return
-      if (reduce) {
-        el.style.strokeDashoffset = 0
-        return
-      }
-      el.getBoundingClientRect()
-      el.style.transition = `stroke-dashoffset ${dur}s ${ease} ${delay}s`
-      el.style.strokeDashoffset = 0
+    const border = borderRef.current
+    const maskEl = routeMaskRef.current
+    const route = routeRef.current
+    const finish = () => {
+      if (border) border.style.strokeDashoffset = 0
+      if (maskEl) maskEl.style.strokeDashoffset = 0
+      /* снимаем маску: полный пунктир виден безусловно, что бы ни думал
+         браузер про анимации внутри <mask> */
+      if (route) route.removeAttribute('mask')
     }
-    draw(borderRef.current, 0.9, 0, 'ease-in-out')
-    draw(routeMaskRef.current, ROUTE_DUR, ROUTE_DELAY, 'linear')
-    /* Страховка: если transition по какой-то причине не сыграл (экзотический
-       браузер), через 2.6с дожимаем оффсеты в 0 — карта видна всегда */
-    const t = setTimeout(
-      () => {
-        for (const ref of [borderRef, routeMaskRef]) {
-          if (ref.current) ref.current.style.strokeDashoffset = 0
-        }
-      },
-      (ROUTE_DELAY + ROUTE_DUR + 0.6) * 1000,
-    )
-    return () => clearTimeout(t)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      finish()
+      return
+    }
+    if (border) {
+      border.getBoundingClientRect()
+      border.style.transition = 'stroke-dashoffset 0.9s ease-in-out'
+      border.style.strokeDashoffset = 0
+    }
+    const L = maskEl ? parseFloat(maskEl.style.strokeDasharray) || 0 : 0
+    let raf
+    const t0 = performance.now()
+    const tick = (now) => {
+      const t = (now - t0) / 1000 - ROUTE_DELAY
+      const p = Math.min(Math.max(t / ROUTE_DUR, 0), 1)
+      if (maskEl) maskEl.style.strokeDashoffset = L * (1 - p)
+      if (p < 1) raf = requestAnimationFrame(tick)
+      else finish()
+    }
+    raf = requestAnimationFrame(tick)
+    /* страховка на случай остановки rAF (фоновая вкладка и т.п.) */
+    const safety = setTimeout(finish, (ROUTE_DELAY + ROUTE_DUR + 1) * 1000)
+    return () => {
+      cancelAnimationFrame(raf)
+      clearTimeout(safety)
+    }
   }, [run])
 
   return (
@@ -136,13 +144,11 @@ export default function KraiMap29() {
             <svg
               viewBox={VIEWBOX}
               fill="none"
-              className="w-full h-auto"
+              className={`w-full h-auto ${run ? 'km-run' : ''}`}
               role="img"
               aria-label="Карта Краснодарского края с районами и маршрутом программы по семи городам"
             >
               <defs>
-                {/* Маска рисования маршрута: сплошная линия шире пунктира
-                    открывает его по мере движения */}
                 <mask id="km-route-mask" maskUnits="userSpaceOnUse">
                   <path
                     ref={routeMaskRef}
@@ -156,12 +162,7 @@ export default function KraiMap29() {
               </defs>
 
               {/* Районы края: административные границы */}
-              <motion.g
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.6, delay: 0.25 }}
-              >
+              <g className="km-fade km-districts">
                 {DISTRICT_DS.map((dd, i) => (
                   <path
                     key={i}
@@ -172,19 +173,15 @@ export default function KraiMap29() {
                     strokeLinejoin="round"
                   />
                 ))}
-              </motion.g>
+              </g>
 
               {/* Адыгея — анклав внутри края: пунктирная граница */}
-              <motion.path
+              <path
                 d={ADYGEA_D}
-                className="km-adygea"
+                className="km-adygea km-fade"
                 stroke="rgba(217, 191, 168, 0.35)"
                 strokeLinejoin="round"
                 fill="rgba(6, 20, 14, 0.3)"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.6, delay: 0.4 }}
               />
 
               {/* Граница края: рисуется штрихом (dashoffset в юнитах пути) */}
@@ -196,62 +193,54 @@ export default function KraiMap29() {
                 strokeLinejoin="round"
               />
 
-              {/* Маршрут: статичный пунктир, открывается маской по мере рисования */}
-              <motion.path
+              {/* Маршрут: статичный пунктир, открывается маской (rAF), в конце маска снимается */}
+              <path
+                ref={routeRef}
                 d={ROUTE_D}
-                className="km-route"
+                className="km-route km-fade"
                 stroke="#e04e39"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 mask="url(#km-route-mask)"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 0.9 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.3, delay: ROUTE_DELAY }}
               />
 
-              {/* Города */}
+              {/* Города: чистый CSS transition, задержка = момент прохождения линии */}
               {SCHEDULE.map(({ city }, i) => {
                 const [x, y] = CITY_XY[city]
                 const on = active === i
                 return (
-                  <motion.g
+                  <circle
                     key={city}
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.45, ease: EASE, delay: cityDelay(city) }}
-                    style={{ transformOrigin: `${x}px ${y}px` }}
-                  >
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={on ? (mob ? 13 : 9) : mob ? 10 : 6}
-                      fill={on ? '#e04e39' : '#f2e9de'}
-                      stroke="#c58b68"
-                      strokeWidth={mob ? 2.4 : 1.6}
-                      style={{ transition: 'all 0.25s' }}
-                    />
-                  </motion.g>
+                    className="km-city"
+                    style={{ transitionDelay: run ? `${cityDelay(city)}s` : '0s' }}
+                    cx={x}
+                    cy={y}
+                    r={on ? (mob ? 13 : 9) : mob ? 10 : 6}
+                    fill={on ? '#e04e39' : '#f2e9de'}
+                    stroke="#c58b68"
+                    strokeWidth={mob ? 2.4 : 1.6}
+                  />
                 )
               })}
             </svg>
             {/* Подписи городов — HTML-слоем: реальные пиксели, читаемо на телефоне */}
             <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-              {SCHEDULE.map(({ city }, i) => {
+              {SCHEDULE.map(({ city }) => {
                 const [x, y] = CITY_XY[city]
                 return (
-                  <motion.span
+                  <span
                     key={city}
-                    className={`map33-label ${active === i ? 'map33-on' : ''}`}
-                    style={{ left: `${((x - VB_X) / VB_W) * 100}%`, top: `${((y - VB_Y) / VB_H) * 100}%` }}
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.5, delay: cityDelay(city) }}
+                    className={`map33-label km-label ${run ? 'km-label-on' : ''} ${
+                      active === SCHEDULE.findIndex((s) => s.city === city) ? 'map33-on' : ''
+                    }`}
+                    style={{
+                      left: `${((x - VB_X) / VB_W) * 100}%`,
+                      top: `${((y - VB_Y) / VB_H) * 100}%`,
+                      transitionDelay: run ? `${cityDelay(city)}s` : '0s',
+                    }}
                   >
                     {city}
-                  </motion.span>
+                  </span>
                 )
               })}
             </div>
