@@ -3,6 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <script>
+      /* Защита от встраивания в чужой iframe (фишинг-оверлеи):
+         reg.ru отдаёт статику через nginx мимо .htaccess, заголовок
+         X-Frame-Options поставить негде — рвём фрейм на клиенте */
+      if (window.top !== window.self) {
+        try { window.top.location.replace(window.self.location.href) } catch (e) { document.documentElement.innerHTML = '' }
+      }
+    </script>
     <meta name="description" content="«Наше дело» — бесплатная обучающая бизнес-программа для ветеранов боевых действий, участников СВО и членов их семей. Семь городов Краснодарского края, очные интенсивы, вебинары и консультации." />
     <title>Наше дело — обучающая бизнес-программа</title>
     <!-- Превью ссылки в мессенджерах и соцсетях.
@@ -72,12 +81,10 @@
       ]
     }
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800;900&family=Unbounded:wght@700;800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Шрифты самохостятся (@font-face в v33.css, файлы в /fonts) —
+         внешних запросов к Google нет с 2026-07-22 -->
+    <link rel="preload" href="../fonts/unbounded-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../fonts/geologica-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
     <style>
       /* Мгновенный экран загрузки: тихая заливка в цвет фона, рисуется до
          подхвата JS и плавно растворяется React'ом (Intro). Никаких точек и
