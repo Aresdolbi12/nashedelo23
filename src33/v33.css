@@ -71,9 +71,17 @@
 
 html {
   scroll-behavior: smooth;
-  /* overflow-x держим на html, НЕ на body: на body он делает body скроллером
-     в части браузеров, и useScroll() Framer'а перестаёт получать прогресс */
+  /* overflow-x держим на html, НЕ на body: на body hidden делает body скроллером
+     в части браузеров, и useScroll() Framer'а перестаёт получать прогресс.
+     iOS WebKit игнорирует hidden на html для жеста панорамирования (сайт
+     «гуляет» вправо-влево) — clip запрещает и жест, при этом НЕ создаёт
+     скролл-контейнер, поэтому на body он тоже безопасен. */
   overflow-x: hidden;
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
 }
 
 section[id] {

@@ -22,7 +22,9 @@ export default function Speakers5() {
           <span className="relative">Спикеры</span>
         </motion.h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+        {/* На телефоне 1 колонка: в 2 узких (155px) текст закрывал всю
+            карточку и не оставалось места под будущие фото спикеров */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
           {SPEAKERS.map(({ name, topic, tbd }, i) => (
             <motion.div
               key={name}
@@ -32,7 +34,7 @@ export default function Speakers5() {
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, ease: EASE, delay: (i % 3) * 0.07 }}
             >
-              <div className="aspect-[4/3] md:aspect-[3/2] relative flex items-end p-5 md:p-6">
+              <div className="aspect-[16/9] sm:aspect-[4/3] md:aspect-[3/2] relative flex items-end p-5 md:p-6">
                 <span className="absolute top-4 right-5 text-white/25 font-black text-4xl">
                   {String(i + 1).padStart(2, '0')}
                 </span>

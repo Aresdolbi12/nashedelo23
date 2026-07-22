@@ -80,13 +80,16 @@ export default function KraiMap29() {
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.6, delay: 0.25 }}
               >
+                {/* vectorEffect: толщина в ЭКРАННЫХ px — на телефоне карта
+                    ужимается втрое и штрихи в юнитах viewBox исчезали */}
                 {DISTRICT_DS.map((dd, i) => (
                   <path
                     key={i}
                     d={dd}
                     fill="rgba(20, 58, 44, 0.42)"
                     stroke="rgba(217, 191, 168, 0.17)"
-                    strokeWidth="0.5"
+                    strokeWidth="0.6"
+                    vectorEffect="non-scaling-stroke"
                     strokeLinejoin="round"
                   />
                 ))}
@@ -96,7 +99,8 @@ export default function KraiMap29() {
               <motion.path
                 d={ADYGEA_D}
                 stroke="rgba(217, 191, 168, 0.35)"
-                strokeWidth="0.7"
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
                 strokeDasharray="3 3"
                 strokeLinejoin="round"
                 fill="rgba(6, 20, 14, 0.3)"
@@ -109,8 +113,9 @@ export default function KraiMap29() {
               {/* Граница края: рисуется штрихом */}
               <motion.path
                 d={BORDER_D}
-                stroke="rgba(217, 191, 168, 0.7)"
-                strokeWidth="1.1"
+                stroke="rgba(217, 191, 168, 0.75)"
+                strokeWidth="1.6"
+                vectorEffect="non-scaling-stroke"
                 strokeLinejoin="round"
                 initial={{ pathLength: 0 }}
                 whileInView={{ pathLength: 1 }}
@@ -122,7 +127,8 @@ export default function KraiMap29() {
               <motion.path
                 d={ROUTE_D}
                 stroke="#e04e39"
-                strokeWidth="1.6"
+                strokeWidth="2.2"
+                vectorEffect="non-scaling-stroke"
                 strokeDasharray="3.5 3.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -148,10 +154,11 @@ export default function KraiMap29() {
                     <circle
                       cx={x}
                       cy={y}
-                      r={on ? 7 : 4.5}
+                      r={on ? 9 : 6}
                       fill={on ? '#e04e39' : '#f2e9de'}
                       stroke="#c58b68"
                       strokeWidth="1.4"
+                      vectorEffect="non-scaling-stroke"
                       style={{ transition: 'all 0.25s' }}
                     />
                   </motion.g>
