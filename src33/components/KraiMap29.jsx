@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { SCHEDULE } from '../content.js'
 import { VIEWBOX, BORDER_D, ADYGEA_D, DISTRICT_DS, ROUTE_D, CITY_XY } from '../kraiGeo.js'
@@ -21,16 +21,82 @@ const ROUTE_FRAC = {
 }
 const cityDelay = (city) => ROUTE_DELAY + (ROUTE_FRAC[city] ?? 0) * ROUTE_DUR
 
+/* Телефон/десктоп для радиусов точек (толщины линий — в v33.css через media) */
+function useMobile() {
+  const [mob, setMob] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const f = () => setMob(mq.matches)
+    f()
+    mq.addEventListener('change', f)
+    return () => mq.removeEventListener('change', f)
+  }, [])
+  return mob
+}
+
 /* География v32: точная карта Краснодарского края (geoBoundaries ADM1/ADM2).
    Реальные полигоны границы, 41 района и Адыгеи-анклава,
    города — по реальным координатам (Web Mercator),
-   маршрут программы — по реальным трассам через реальные станицы
-   (Ханская—Майкоп—Лабинск, Тихорецк—Павловская—Староминская,
-   Каневская—Славянск—Крымск, серпантин А-147, М-4 через Горячий Ключ).
-   Последовательность: рисуется граница → проявляются районы →
-   прочерчивается маршрут → зажигаются города. */
+   маршрут программы — по реальным трассам.
+
+   Рисование линий — НЕ через framer pathLength: у WebKit (весь iOS) атрибут
+   pathLength игнорируется в расчёте stroke-dasharray, и на iPhone карта
+   не прорисовывалась вовсе. Вместо этого классика: реальная длина через
+   getTotalLength() + анимация stroke-dashoffset в юнитах пути. Пунктир
+   маршрута сохраняем маской: рисуется сплошная маска поверх пунктирного пути.
+   Толщины — в юнитах viewBox, на телефоне крупнее через media в v33.css
+   (vector-effect не используем — у него свои WebKit-баги с dasharray). */
 export default function KraiMap29() {
   const [active, setActive] = useState(null)
+  const [run, setRun] = useState(false)
+  const mob = useMobile()
+
+  const borderRef = useRef(null)
+  const routeMaskRef = useRef(null)
+
+  /* До входа в вьюпорт: спрятать линии их же штрихом (offset = длина).
+     Императивно, без state: framer у motion-элементов владеет style,
+     а нам нужны свои значения на обычных path. */
+  useLayoutEffect(() => {
+    for (const ref of [borderRef, routeMaskRef]) {
+      const el = ref.current
+      if (!el) continue
+      const L = el.getTotalLength()
+      el.style.strokeDasharray = L
+      el.style.strokeDashoffset = L
+    }
+  }, [])
+
+  /* Вход в вьюпорт: CSS-transition дорисовывает штрих до конца.
+     stroke-dashoffset в юнитах пути — WebKit-совместимо (в отличие от
+     framer pathLength, который iOS игнорирует в расчёте dasharray). */
+  useEffect(() => {
+    if (!run) return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const draw = (el, dur, delay, ease) => {
+      if (!el) return
+      if (reduce) {
+        el.style.strokeDashoffset = 0
+        return
+      }
+      el.getBoundingClientRect()
+      el.style.transition = `stroke-dashoffset ${dur}s ${ease} ${delay}s`
+      el.style.strokeDashoffset = 0
+    }
+    draw(borderRef.current, 0.9, 0, 'ease-in-out')
+    draw(routeMaskRef.current, ROUTE_DUR, ROUTE_DELAY, 'linear')
+    /* Страховка: если transition по какой-то причине не сыграл (экзотический
+       браузер), через 2.6с дожимаем оффсеты в 0 — карта видна всегда */
+    const t = setTimeout(
+      () => {
+        for (const ref of [borderRef, routeMaskRef]) {
+          if (ref.current) ref.current.style.strokeDashoffset = 0
+        }
+      },
+      (ROUTE_DELAY + ROUTE_DUR + 0.6) * 1000,
+    )
+    return () => clearTimeout(t)
+  }, [run])
 
   return (
     <section id="schedule" className="relative px-6 lg:px-10 py-24 md:py-32">
@@ -65,6 +131,7 @@ export default function KraiMap29() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.9, ease: EASE }}
+            onViewportEnter={() => setRun(true)}
           >
             <svg
               viewBox={VIEWBOX}
@@ -73,6 +140,21 @@ export default function KraiMap29() {
               role="img"
               aria-label="Карта Краснодарского края с районами и маршрутом программы по семи городам"
             >
+              <defs>
+                {/* Маска рисования маршрута: сплошная линия шире пунктира
+                    открывает его по мере движения */}
+                <mask id="km-route-mask" maskUnits="userSpaceOnUse">
+                  <path
+                    ref={routeMaskRef}
+                    d={ROUTE_D}
+                    stroke="#fff"
+                    strokeWidth="12"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </mask>
+              </defs>
+
               {/* Районы края: административные границы */}
               <motion.g
                 initial={{ opacity: 0 }}
@@ -80,16 +162,13 @@ export default function KraiMap29() {
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.6, delay: 0.25 }}
               >
-                {/* vectorEffect: толщина в ЭКРАННЫХ px — на телефоне карта
-                    ужимается втрое и штрихи в юнитах viewBox исчезали */}
                 {DISTRICT_DS.map((dd, i) => (
                   <path
                     key={i}
                     d={dd}
+                    className="km-district"
                     fill="rgba(20, 58, 44, 0.42)"
-                    stroke="rgba(217, 191, 168, 0.17)"
-                    strokeWidth="0.6"
-                    vectorEffect="non-scaling-stroke"
+                    stroke="rgba(217, 191, 168, 0.2)"
                     strokeLinejoin="round"
                   />
                 ))}
@@ -98,10 +177,8 @@ export default function KraiMap29() {
               {/* Адыгея — анклав внутри края: пунктирная граница */}
               <motion.path
                 d={ADYGEA_D}
+                className="km-adygea"
                 stroke="rgba(217, 191, 168, 0.35)"
-                strokeWidth="1"
-                vectorEffect="non-scaling-stroke"
-                strokeDasharray="3 3"
                 strokeLinejoin="round"
                 fill="rgba(6, 20, 14, 0.3)"
                 initial={{ opacity: 0 }}
@@ -110,32 +187,27 @@ export default function KraiMap29() {
                 transition={{ duration: 0.6, delay: 0.4 }}
               />
 
-              {/* Граница края: рисуется штрихом */}
-              <motion.path
+              {/* Граница края: рисуется штрихом (dashoffset в юнитах пути) */}
+              <path
+                ref={borderRef}
                 d={BORDER_D}
+                className="km-border"
                 stroke="rgba(217, 191, 168, 0.75)"
-                strokeWidth="1.6"
-                vectorEffect="non-scaling-stroke"
                 strokeLinejoin="round"
-                initial={{ pathLength: 0 }}
-                whileInView={{ pathLength: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.9, ease: 'easeInOut' }}
               />
 
-              {/* Маршрут программы по реальным трассам */}
+              {/* Маршрут: статичный пунктир, открывается маской по мере рисования */}
               <motion.path
                 d={ROUTE_D}
+                className="km-route"
                 stroke="#e04e39"
-                strokeWidth="2.2"
-                vectorEffect="non-scaling-stroke"
-                strokeDasharray="3.5 3.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 0.9 }}
+                mask="url(#km-route-mask)"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 0.9 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ pathLength: { duration: ROUTE_DUR, ease: 'linear', delay: ROUTE_DELAY }, opacity: { duration: 0.3, delay: ROUTE_DELAY } }}
+                transition={{ duration: 0.3, delay: ROUTE_DELAY }}
               />
 
               {/* Города */}
@@ -154,11 +226,10 @@ export default function KraiMap29() {
                     <circle
                       cx={x}
                       cy={y}
-                      r={on ? 9 : 6}
+                      r={on ? (mob ? 13 : 9) : mob ? 10 : 6}
                       fill={on ? '#e04e39' : '#f2e9de'}
                       stroke="#c58b68"
-                      strokeWidth="1.4"
-                      vectorEffect="non-scaling-stroke"
+                      strokeWidth={mob ? 2.4 : 1.6}
                       style={{ transition: 'all 0.25s' }}
                     />
                   </motion.g>
