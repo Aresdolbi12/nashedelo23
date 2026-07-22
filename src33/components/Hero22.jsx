@@ -113,7 +113,7 @@ export default function Hero22({ starDraw = false }) {
           <p className="text-[#f2ece3]/90 text-[15px] md:text-lg font-semibold uppercase tracking-[0.24em] md:tracking-[0.3em] text-center leading-relaxed max-w-4xl">
             Обучающая бизнес-программа
             <br />
-            <span className="inline-block text-[13px] md:text-[15px] text-[#f2ece3]/70 text-balance md:whitespace-nowrap tracking-[0.14em] md:tracking-[0.18em]">
+            <span className="inline-block text-[13px] md:text-[15px] text-[#f2ece3]/70 text-balance lg:whitespace-nowrap tracking-[0.14em] md:tracking-[0.18em]">
               для ветеранов боевых действий, участников СВО и членов их семей
             </span>
           </p>
