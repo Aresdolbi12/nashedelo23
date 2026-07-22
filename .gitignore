@@ -4,3 +4,4 @@ dist
 *.local
 graphify-out/
 dist-regru
+shots-mobile/
