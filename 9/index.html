@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="«Наше дело» — практическая образовательная программа для ветеранов боевых действий, участников СВО и их семей. Бесплатно, в семи городах Краснодарского края." />
+    <title>Наше дело — от рассвета к своему делу. Программа для ветеранов и их семей</title>
+    <link rel="preload" href="/nashedelo23/assets/logo-nashe-delo-D5CUX6lR.webp" as="image" type="image/webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Мгновенный экран загрузки: рисуется до подхвата JS, снимается React'ом.
+         Фон body НЕ задаём: живое небо (Bg) лежит на z-index:-10 и непрозрачный
+         body его перекрыл бы. Пустой экран до JS закрывает #boot своим фоном. */
+      #boot {
+        position: fixed; inset: 0; z-index: 200;
+        background: linear-gradient(180deg, #16304f 0%, #0c1e35 100%);
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+      }
+      #boot i {
+        width: 9px; height: 9px; border-radius: 50%; background: #a8c8dc;
+        animation: bootPulse 0.9s ease-in-out infinite alternate;
+      }
+      #boot i:nth-child(2) { animation-delay: 0.18s; background: #dcebf5; }
+      #boot i:nth-child(3) { animation-delay: 0.36s; background: #ffdf9e; }
+      @keyframes bootPulse { from { opacity: 0.25; transform: scale(0.8); } to { opacity: 1; transform: scale(1.15); } }
+      @media (prefers-reduced-motion: reduce) { #boot i { animation: none; } }
+    </style>
+    <script type="module" crossorigin src="/nashedelo23/assets/v9-VNE3D-9q.js"></script>
+    <link rel="modulepreload" crossorigin href="/nashedelo23/assets/index-CSalRXhb.js">
+    <link rel="modulepreload" crossorigin href="/nashedelo23/assets/use-scroll-RAFY4lPI.js">
+    <link rel="modulepreload" crossorigin href="/nashedelo23/assets/use-motion-value-C1_jAeGE.js">
+    <link rel="modulepreload" crossorigin href="/nashedelo23/assets/use-transform-CCKaQn7p.js">
+    <link rel="modulepreload" crossorigin href="/nashedelo23/assets/use-reduced-motion-DJuJ7JIH.js">
+    <link rel="modulepreload" crossorigin href="/nashedelo23/assets/content-B21MGTX8.js">
+    <link rel="modulepreload" crossorigin href="/nashedelo23/assets/use-spring-Uzi_wu0j.js">
+    <link rel="stylesheet" crossorigin href="/nashedelo23/assets/v9-ClIVCVqP.css">
+  </head>
+  <body>
+    <div id="boot" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div id="root"></div>
+  </body>
+</html>
