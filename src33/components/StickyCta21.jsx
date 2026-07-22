@@ -49,15 +49,18 @@ export default function StickyCta21() {
             >
               Записаться бесплатно
             </a>
+            {/* Тап-зона 44px (норма), видимый круг прежний 28px — центр совпадает */}
             <button
               onClick={() => setDismissed(true)}
               aria-label="Скрыть кнопку записи"
-              className="absolute -top-2.5 -right-2.5 w-7 h-7 rounded-full bg-[#0d2f22] border border-[#d9bfa8]/50 text-[#d9bfa8] hover:text-white hover:border-white/80 transition flex items-center justify-center cursor-pointer shadow-lg"
+              className="absolute -top-[18px] -right-[18px] w-11 h-11 flex items-center justify-center cursor-pointer group"
             >
-              <svg width="11" height="11" viewBox="0 0 14 14" stroke="currentColor" strokeWidth="2" fill="none">
-                <line x1="1" y1="1" x2="13" y2="13" />
-                <line x1="13" y1="1" x2="1" y2="13" />
-              </svg>
+              <span className="w-7 h-7 rounded-full bg-[#0d2f22] border border-[#d9bfa8]/50 text-[#d9bfa8] group-hover:text-white group-hover:border-white/80 transition flex items-center justify-center shadow-lg">
+                <svg width="11" height="11" viewBox="0 0 14 14" stroke="currentColor" strokeWidth="2" fill="none">
+                  <line x1="1" y1="1" x2="13" y2="13" />
+                  <line x1="13" y1="1" x2="1" y2="13" />
+                </svg>
+              </span>
             </button>
           </div>
         </motion.div>
