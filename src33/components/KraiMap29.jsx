@@ -6,6 +6,21 @@ import { VIEWBOX, BORDER_D, ADYGEA_D, DISTRICT_DS, ROUTE_D, CITY_XY } from '../k
 const EASE = [0.19, 1, 0.22, 1]
 const [VB_X, VB_Y, VB_W, VB_H] = VIEWBOX.split(' ').map(Number)
 
+/* Доля длины маршрута, на которой линия достигает города (замерено по ROUTE_D):
+   город зажигается ровно в момент прохождения линии — порядок всегда совпадает */
+const ROUTE_DELAY = 0.9
+const ROUTE_DUR = 2
+const ROUTE_FRAC = {
+  Белореченск: 0,
+  Армавир: 0.1,
+  Ейск: 0.342,
+  Новороссийск: 0.575,
+  Сочи: 0.733,
+  Тимашевск: 0.948,
+  Краснодар: 1,
+}
+const cityDelay = (city) => ROUTE_DELAY + (ROUTE_FRAC[city] ?? 0) * ROUTE_DUR
+
 /* География v32: точная карта Краснодарского края (geoBoundaries ADM1/ADM2).
    Реальные полигоны границы, 41 района и Адыгеи-анклава,
    города — по реальным координатам (Web Mercator),
@@ -114,7 +129,7 @@ export default function KraiMap29() {
                 initial={{ pathLength: 0, opacity: 0 }}
                 whileInView={{ pathLength: 1, opacity: 0.9 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ pathLength: { duration: 2, ease: 'easeInOut', delay: 0.9 }, opacity: { duration: 0.3, delay: 0.9 } }}
+                transition={{ pathLength: { duration: ROUTE_DUR, ease: 'linear', delay: ROUTE_DELAY }, opacity: { duration: 0.3, delay: ROUTE_DELAY } }}
               />
 
               {/* Города */}
@@ -127,7 +142,7 @@ export default function KraiMap29() {
                     initial={{ opacity: 0, scale: 0 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.45, ease: EASE, delay: 1.2 + i * 0.18 }}
+                    transition={{ duration: 0.45, ease: EASE, delay: cityDelay(city) }}
                     style={{ transformOrigin: `${x}px ${y}px` }}
                   >
                     <circle
@@ -155,7 +170,7 @@ export default function KraiMap29() {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.5, delay: 1.2 + i * 0.18 }}
+                    transition={{ duration: 0.5, delay: cityDelay(city) }}
                   >
                     {city}
                   </motion.span>
