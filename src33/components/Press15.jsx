@@ -3,22 +3,29 @@ import { ArrowIcon } from '../../src2/components/shared2.jsx'
 
 const EASE = [0.19, 1, 0.22, 1]
 
-/* «О нас пишут» v31: новости идут друг за другом (стопка), без нитей —
-   нити теперь у цитат. Границы табличек подсвечиваются при наведении
-   (как у тезисов «О проекте»), у каждой — кнопка «Читать материал».
-   Цитаты — ЗАГЛУШКИ по просьбе заказчика. */
+/* «О нас пишут» v33: РЕАЛЬНЫЕ публикации о старте программы (21.07.2026).
+   Заголовки — как в первоисточниках; у новости администрации края
+   заголовок с сайта недоступен, поэтому дано описание материала. */
 const ROWS = [
   {
-    outlet: 'Деловая газета. Юг',
-    quote: 'Программа помогает ветеранам сделать первый шаг из армии в собственное дело',
+    outlet: 'РИА Новости',
+    title: 'В Краснодарском крае стартует проект «Наше дело»',
+    href: 'https://ria.ru/20260721/ruppel-2106110286.html',
   },
   {
-    outlet: 'Кубань 24',
-    quote: 'Семь городов края примут бесплатные бизнес-интенсивы для участников СВО и их семей',
+    outlet: 'МК на Кубани',
+    title: 'В семи городах Кубани запускают бизнес-курс для ветеранов СВО и их семей',
+    href: 'https://kuban.mk.ru/economics/2026/07/21/v-semi-gorodakh-kubani-zapuskayut-bizneskurs-dlya-veteranov-svo-i-ikh-semey.html',
   },
   {
-    outlet: 'РБК Краснодар',
-    quote: 'Пример программы, где за словами сразу следует план действий',
+    outlet: 'Администрация Краснодарского края',
+    title: 'Официальная новость о старте программы на портале администрации региона',
+    href: 'https://admkrai.krasnodar.ru/content/1131/show/834091/',
+  },
+  {
+    outlet: 'Газета «Единство»',
+    title: 'В Краснодарском крае стартует проект «Наше дело» — образовательная программа для ветеранов СВО и членов их семей',
+    href: 'https://pav-edin23.ru/2026/07/21/v-krasnodarskom-krae-startuet-proekt-nashe-delo-obrazovatelnaya-programma-dlya-veteranov-svo-i-chlenov-ix-semej/',
   },
 ]
 
@@ -40,8 +47,8 @@ export default function Press15() {
         </motion.h2>
 
         <div className="space-y-6 md:space-y-8 max-w-3xl">
-          {ROWS.map(({ outlet, quote }, i) => (
-            <motion.figure
+          {ROWS.map(({ outlet, title, href }, i) => (
+            <motion.article
               key={outlet}
               initial={{ opacity: 0, y: 26 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -49,24 +56,26 @@ export default function Press15() {
               transition={{ duration: 0.7, ease: EASE, delay: i * 0.08 }}
             >
               <div className="plaque22 newsplaque31 relative px-8 py-7 sm:px-10 sm:py-8">
-                <figcaption className="text-[#623b2a] font-black uppercase tracking-[0.14em] text-[13px] sm:text-sm">
+                <p className="text-[#623b2a] font-black uppercase tracking-[0.14em] text-[13px] sm:text-sm">
                   {outlet}
-                </figcaption>
-                <blockquote className="text-[#27251f] mt-3 font-semibold text-[15px] sm:text-lg leading-snug">
-                  «{quote}»
-                </blockquote>
-                <a href="#" className="btn-read31 mt-6" aria-label={`Читать материал: ${outlet}`}>
+                </p>
+                <h3 className="text-[#27251f] mt-3 font-semibold text-[15px] sm:text-lg leading-snug">
+                  {title}
+                </h3>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-read31 mt-6"
+                  aria-label={`Читать материал: ${outlet}`}
+                >
                   Читать материал
                   <ArrowIcon size={15} />
                 </a>
               </div>
-            </motion.figure>
+            </motion.article>
           ))}
         </div>
-
-        <p className="text-[#d9c9b8]/45 text-xs mt-10">
-          Примеры вида публикаций. Реальные материалы появятся здесь после старта программы.
-        </p>
       </div>
     </section>
   )

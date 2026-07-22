@@ -63,7 +63,7 @@ export default function KraiMap29() {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 1.2, delay: 1.4 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
               >
                 {DISTRICT_DS.map((dd, i) => (
                   <path
@@ -88,7 +88,7 @@ export default function KraiMap29() {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 1, delay: 1.7 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
               />
 
               {/* Граница края: рисуется штрихом */}
@@ -100,7 +100,7 @@ export default function KraiMap29() {
                 initial={{ pathLength: 0 }}
                 whileInView={{ pathLength: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 2.2, ease: 'easeInOut' }}
+                transition={{ duration: 1.2, ease: 'easeInOut' }}
               />
 
               {/* Маршрут программы по реальным трассам */}
@@ -114,7 +114,7 @@ export default function KraiMap29() {
                 initial={{ pathLength: 0, opacity: 0 }}
                 whileInView={{ pathLength: 1, opacity: 0.9 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ pathLength: { duration: 4.2, ease: 'easeInOut', delay: 2.1 }, opacity: { duration: 0.4, delay: 2.1 } }}
+                transition={{ pathLength: { duration: 2, ease: 'easeInOut', delay: 0.9 }, opacity: { duration: 0.3, delay: 0.9 } }}
               />
 
               {/* Города */}
@@ -127,7 +127,7 @@ export default function KraiMap29() {
                     initial={{ opacity: 0, scale: 0 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.45, ease: EASE, delay: 2.4 + i * 0.5 }}
+                    transition={{ duration: 0.45, ease: EASE, delay: 1.2 + i * 0.18 }}
                     style={{ transformOrigin: `${x}px ${y}px` }}
                   >
                     <circle
@@ -155,7 +155,7 @@ export default function KraiMap29() {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.5, delay: 2.4 + i * 0.5 }}
+                    transition={{ duration: 0.5, delay: 1.2 + i * 0.18 }}
                   >
                     {city}
                   </motion.span>
