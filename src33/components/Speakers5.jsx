@@ -27,52 +27,40 @@ export default function Speakers5() {
         </motion.h2>
 
         {/* 8 спикеров: 2 колонки на телефоне, 4 на десктопе — ровно 2 ряда.
-            Пропорция карточки = пропорции фото (4:5): снимок целиком */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+            Пропорция карточки = пропорции фото (4:5): снимок целиком, чистый,
+            без плашек — ФИО и тема подписью ПОД карточкой (правка 24.07) */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-7 md:gap-x-5 md:gap-y-9">
           {SPEAKERS.map(({ name, topic, photo, tbd }, i) => (
             <motion.div
               key={name}
-              className="speaker-card3"
+              className="group"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, ease: EASE, delay: (i % 4) * 0.07 }}
             >
-              <div className="aspect-[4/5] relative flex items-end p-3.5 md:p-5 overflow-hidden rounded-[inherit]">
+              <div className="speaker-card3 aspect-[4/5] relative overflow-hidden">
                 {photo ? (
-                  <>
-                    <img
-                      src={`../speakers/${photo}.webp?v=2`}
-                      alt={name}
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    {/* Градиент бренда: текст читается, лицо остаётся чистым */}
-                    <div
-                      className="absolute inset-0 bg-gradient-to-t from-[#0d2f22]/95 via-[#0d2f22]/25 via-35% to-transparent"
-                      aria-hidden="true"
-                    />
-                  </>
+                  <img
+                    src={`../speakers/${photo}.webp?v=2`}
+                    alt={name}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
+                  />
                 ) : (
                   <svg viewBox="0 0 100 100" className="absolute inset-x-0 bottom-0 w-2/5 mx-auto opacity-15" aria-hidden="true">
                     <circle cx="50" cy="34" r="16" fill="#fff" />
                     <path d="M18 100 Q 18 62 50 62 Q 82 62 82 100 Z" fill="#fff" />
                   </svg>
                 )}
-                <span className="absolute top-2.5 right-3.5 md:top-4 md:right-5 text-white/35 font-black text-2xl md:text-4xl [text-shadow:0_1px_10px_rgba(13,47,34,0.55)]">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <div className="relative">
-                  <div className="text-[#d9bfa8] text-[10px] md:text-xs font-semibold tracking-wide uppercase [text-shadow:0_1px_6px_rgba(13,47,34,0.8)]">
-                    {topic}
-                  </div>
-                  <div
-                    className={`font-bold text-sm md:text-lg mt-1 leading-snug [text-shadow:0_1px_8px_rgba(13,47,34,0.9)] ${
-                      tbd ? 'text-white/60' : 'text-white'
-                    }`}
-                  >
-                    {name}
-                  </div>
+              </div>
+              {/* Подпись под фото: тема бежевой строкой-кикером, ФИО крупно */}
+              <div className="pt-3 md:pt-4 px-0.5">
+                <div className="text-[#d9bfa8] text-[10px] md:text-xs font-semibold tracking-[0.14em] uppercase">
+                  {topic}
+                </div>
+                <div className={`font-bold text-sm md:text-lg mt-1 leading-snug ${tbd ? 'text-white/60' : 'text-white'}`}>
+                  {name}
                 </div>
               </div>
             </motion.div>
