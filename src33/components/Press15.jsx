@@ -27,6 +27,27 @@ const ROWS = [
     title: 'В Краснодарском крае стартует проект «Наше дело» — образовательная программа для ветеранов СВО и членов их семей',
     href: 'https://pav-edin23.ru/2026/07/21/v-krasnodarskom-krae-startuet-proekt-nashe-delo-obrazovatelnaya-programma-dlya-veteranov-svo-i-chlenov-ix-semej/',
   },
+  /* Вторая волна (согласована заказчиком 24.07.2026) */
+  {
+    outlet: 'Кубань 24',
+    title: 'На Кубани по нацпроекту проведут бизнес-обучение для участников СВО и их семей',
+    href: 'https://kuban24.tv/item/na-kubani-po-natsproektu-provedut-biznes-obuchenie-dlya-uchastnikov-svo-i-ih-semej',
+  },
+  {
+    outlet: 'Центр «Мой бизнес»',
+    title: '«Наше дело»: на Кубани организуют бизнес-обучение для участников СВО и их семей',
+    href: 'https://moibiz93.ru/events/news/nashe-delo-na-kubani-organizuyut-biznes-obuchenie-dlya-uchastnikov-svo-i-ikh-semey/',
+  },
+  {
+    outlet: 'Кубань Сегодня',
+    title: 'В Краснодарском крае организуют бизнес-обучение для участников СВО и их семей',
+    href: 'https://kubantoday.ru/v-krasnodarskom-krae-organizujut-biznes-obuchenie-dlja-uchastnikov-svo-i-ih-semej/',
+  },
+  {
+    outlet: 'Портал 23RUS',
+    title: 'На Кубани организуют бизнес-обучение для участников СВО и их семей',
+    href: 'https://23rus.org/news/society/62930.html',
+  },
 ]
 
 export default function Press15() {
