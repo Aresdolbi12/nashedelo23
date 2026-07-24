@@ -11,6 +11,7 @@ import KraiMap29 from './components/KraiMap29.jsx'
 import Speakers5 from './components/Speakers5.jsx'
 import Faq5 from './components/Faq5.jsx'
 import Cta5 from './components/Cta5.jsx'
+import SvoSupport33 from './components/SvoSupport33.jsx'
 import Footer5 from './components/Footer5.jsx'
 import StickyCta21 from './components/StickyCta21.jsx'
 
@@ -34,6 +35,7 @@ export default function App() {
         <Press15 />
         <Faq5 />
         <Cta5 />
+        <SvoSupport33 />
       </main>
       <Footer5 />
       <StickyCta21 />

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { ArrowIcon } from './shared33.jsx'
+import { REGISTER_URL } from '../content.js'
 
 const EASE = [0.19, 1, 0.22, 1]
 
@@ -39,7 +40,7 @@ export default function Cta5() {
           transition={{ duration: 0.7, ease: EASE, delay: 0.25 }}
         >
           <a
-            href="https://forms.yandex.ru/"
+            href={REGISTER_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-ink inline-flex items-center gap-3 px-12 py-6 text-lg font-bold"

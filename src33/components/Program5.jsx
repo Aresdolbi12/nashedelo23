@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { DAY1, DAY2, WEBINARS } from '../content.js'
+import { DAY1, DAY2, WEBINARS, SPEAKER_PHOTOS } from '../content.js'
 
 const EASE = [0.19, 1, 0.22, 1]
 
@@ -64,13 +64,23 @@ function LectureModal({ lecture, onClose }) {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-6 items-start">
-          {/* Фото спикера: плейсхолдер до передачи реальных фотографий */}
-          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-br from-[#d9bfa8]/60 to-[#623b2a]/25 flex items-center justify-center flex-shrink-0 border border-[#27251f]/10">
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#623b2a" strokeWidth="1.5" aria-hidden="true">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
-            </svg>
-          </div>
+          {/* Фото спикера (2026-07-24); силуэт — если фото ещё нет */}
+          {SPEAKER_PHOTOS[lecture.speaker] ? (
+            <img
+              src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}.webp`}
+              alt={lecture.speaker}
+              loading="lazy"
+              className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover flex-shrink-0 border border-[#27251f]/10"
+              style={{ objectPosition: '50% 18%' }}
+            />
+          ) : (
+            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-br from-[#d9bfa8]/60 to-[#623b2a]/25 flex items-center justify-center flex-shrink-0 border border-[#27251f]/10">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#623b2a" strokeWidth="1.5" aria-hidden="true">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
+              </svg>
+            </div>
+          )}
           <div>
             <h3 className="font-black text-[#27251f] text-xl md:text-2xl leading-snug">{lecture.title}</h3>
             <p className="text-[#623b2a] font-semibold mt-2">
