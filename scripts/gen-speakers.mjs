@@ -16,7 +16,7 @@ const MAP = {
   'Нагорная.jpg': ['nagornaya', { left: 212, top: 109, width: 856, height: 1070 }],
   'Шаповалова Л.В..jpg': ['shapovalova', { left: 0, top: 0, width: 720, height: 900 }],
   'Жабин В.В..jpg': ['zhabin', { left: 124, top: 0, width: 1033, height: 1292 }],
-  'Гаврилов.jpg': ['gavrilov', { left: 180, top: 185, width: 840, height: 1050 }],
+  'Гаврилов.jpg': ['gavrilov', { left: 240, top: 230, width: 720, height: 900 }],
   'Гертель.jpg': ['gertel', { left: 197, top: 28, width: 560, height: 700 }],
   'Папета.jpg': ['papeta', { left: 154, top: 42, width: 448, height: 560 }],
   'Амельченко.jpg': ['amelchenko', { left: 74, top: 0, width: 512, height: 640 }],

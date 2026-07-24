@@ -42,7 +42,7 @@ export default function Speakers5() {
               <div className="speaker-card3 aspect-[4/5] relative overflow-hidden">
                 {photo ? (
                   <img
-                    src={`../speakers/${photo}.webp?v=2`}
+                    src={`../speakers/${photo}.webp?v=3`}
                     alt={name}
                     loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"

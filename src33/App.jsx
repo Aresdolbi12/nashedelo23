@@ -14,6 +14,7 @@ import Cta5 from './components/Cta5.jsx'
 import SvoSupport33 from './components/SvoSupport33.jsx'
 import Footer5 from './components/Footer5.jsx'
 import StickyCta21 from './components/StickyCta21.jsx'
+import CookieNote33 from './components/CookieNote33.jsx'
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
       </main>
       <Footer5 />
       <StickyCta21 />
+      <CookieNote33 />
     </div>
     </MotionConfig>
   )

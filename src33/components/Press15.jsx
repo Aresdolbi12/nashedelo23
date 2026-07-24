@@ -5,7 +5,9 @@ const EASE = [0.19, 1, 0.22, 1]
 
 /* «О нас пишут» v33: РЕАЛЬНЫЕ публикации о старте программы (21.07.2026).
    Заголовки — как в первоисточниках; у новости администрации края
-   заголовок с сайта недоступен, поэтому дано описание материала. */
+   заголовок с сайта недоступен, поэтому дано описание материала.
+   ПРАВИЛО (Валерия, 24.07.2026): публикуем ТОЛЬКО материалы, которые даёт
+   заказчик — самостоятельно найденные ссылки сюда не добавлять. */
 const ROWS = [
   {
     outlet: 'РИА Новости',
@@ -27,26 +29,10 @@ const ROWS = [
     title: 'В Краснодарском крае стартует проект «Наше дело» — образовательная программа для ветеранов СВО и членов их семей',
     href: 'https://pav-edin23.ru/2026/07/21/v-krasnodarskom-krae-startuet-proekt-nashe-delo-obrazovatelnaya-programma-dlya-veteranov-svo-i-chlenov-ix-semej/',
   },
-  /* Вторая волна (согласована заказчиком 24.07.2026) */
   {
-    outlet: 'Кубань 24',
-    title: 'На Кубани по нацпроекту проведут бизнес-обучение для участников СВО и их семей',
-    href: 'https://kuban24.tv/item/na-kubani-po-natsproektu-provedut-biznes-obuchenie-dlya-uchastnikov-svo-i-ih-semej',
-  },
-  {
-    outlet: 'Центр «Мой бизнес»',
-    title: '«Наше дело»: на Кубани организуют бизнес-обучение для участников СВО и их семей',
-    href: 'https://moibiz93.ru/events/news/nashe-delo-na-kubani-organizuyut-biznes-obuchenie-dlya-uchastnikov-svo-i-ikh-semey/',
-  },
-  {
-    outlet: 'Кубань Сегодня',
-    title: 'В Краснодарском крае организуют бизнес-обучение для участников СВО и их семей',
-    href: 'https://kubantoday.ru/v-krasnodarskom-krae-organizujut-biznes-obuchenie-dlja-uchastnikov-svo-i-ih-semej/',
-  },
-  {
-    outlet: 'Портал 23RUS',
-    title: 'На Кубани организуют бизнес-обучение для участников СВО и их семей',
-    href: 'https://23rus.org/news/society/62930.html',
+    outlet: 'Комсомольская правда — Кубань',
+    title: 'На Кубани разработали бизнес-курсы для участников СВО и членов их семей',
+    href: 'https://www.kuban.kp.ru/online/news/7083311/',
   },
 ]
 

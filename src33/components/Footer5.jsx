@@ -151,6 +151,10 @@ export default function Footer5() {
         </div>
         <div className="border-t border-white/15 mt-12 pt-6 flex flex-col sm:flex-row justify-between gap-3 text-xs text-[#b3a394]">
           <span>© 2026 «Наше дело». Все права защищены.</span>
+          {/* Обязательная ссылка: ч. 2 ст. 18.1 152-ФЗ — политика в открытом доступе */}
+          <a href="../privacy/" className="underline underline-offset-2 hover:text-white transition">
+            Политика обработки персональных данных
+          </a>
           <span>нашедело23.рф</span>
         </div>
       </div>
