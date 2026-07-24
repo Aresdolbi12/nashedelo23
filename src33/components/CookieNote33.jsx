@@ -32,7 +32,7 @@ export default function CookieNote33() {
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed bottom-3 left-3 right-3 sm:right-auto sm:max-w-[420px] z-[90] rounded-2xl border border-[#d9bfa8]/30 bg-[#0d2f22]/95 backdrop-blur px-5 py-4 shadow-[0_18px_44px_-16px_rgba(0,0,0,0.6)]"
+          className="fixed bottom-[88px] left-3 right-3 sm:bottom-3 sm:right-auto sm:max-w-[420px] z-[90] rounded-2xl border border-[#d9bfa8]/30 bg-[#0d2f22]/95 backdrop-blur px-5 py-4 shadow-[0_18px_44px_-16px_rgba(0,0,0,0.6)]"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 16 }}
