@@ -8,14 +8,17 @@ import { resolve } from 'node:path'
 const root = 'C:/Users/vlad/Documents/nashedelo23'
 const src = resolve(root, 'Фото спикеров')
 
-/* file → [slug, {left, top, width, height}] — кадр в координатах исходника */
+/* file → [slug, {left, top, width, height}] — кадр в координатах исходника.
+   Ревизия 2 (24.07): карточки стали 4:5 и показывают снимок ЦЕЛИКОМ, поэтому
+   планы выровнены по крупности — у всех поясной/погрудный, лицо ~25-35%
+   высоты кадра (Гаврилов и Нагорная были в рост, Папета — слишком общо). */
 const MAP = {
-  'Нагорная.jpg': ['nagornaya', { left: 0, top: 90, width: 1280, height: 1600 }],
-  'Шаповалова Л.В..jpg': ['shapovalova', { left: 0, top: 0, width: 640, height: 800 }],
+  'Нагорная.jpg': ['nagornaya', { left: 212, top: 109, width: 856, height: 1070 }],
+  'Шаповалова Л.В..jpg': ['shapovalova', { left: 0, top: 0, width: 720, height: 900 }],
   'Жабин В.В..jpg': ['zhabin', { left: 124, top: 0, width: 1033, height: 1292 }],
-  'Гаврилов.jpg': ['gavrilov', { left: 0, top: 103, width: 1280, height: 1600 }],
-  'Гертель.jpg': ['gertel', { left: 205, top: 0, width: 680, height: 851 }],
-  'Папета.jpg': ['papeta', { left: 0, top: 14, width: 602, height: 752 }],
+  'Гаврилов.jpg': ['gavrilov', { left: 180, top: 185, width: 840, height: 1050 }],
+  'Гертель.jpg': ['gertel', { left: 197, top: 28, width: 560, height: 700 }],
+  'Папета.jpg': ['papeta', { left: 154, top: 42, width: 448, height: 560 }],
   'Амельченко.jpg': ['amelchenko', { left: 74, top: 0, width: 512, height: 640 }],
   'Беляева.jpg': ['belyaeva', { left: 165, top: 0, width: 800, height: 1000 }],
 }

@@ -67,7 +67,7 @@ function LectureModal({ lecture, onClose }) {
           {/* Фото спикера (2026-07-24); силуэт — если фото ещё нет */}
           {SPEAKER_PHOTOS[lecture.speaker] ? (
             <img
-              src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}.webp`}
+              src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}.webp?v=2`}
               alt={lecture.speaker}
               loading="lazy"
               className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover flex-shrink-0 border border-[#27251f]/10"
