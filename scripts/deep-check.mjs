@@ -102,8 +102,7 @@ async function sweep(profile, ctxOpts, browser) {
       const box = await close.boundingBox()
       if (box.width < 43 || box.height < 43) note(profile, `тап-зона крестика ${Math.round(box.width)}px`)
       await close.click()
-      await page.waitForTimeout(400)
-      if (await close.isVisible().catch(() => false)) note(profile, 'крестик не скрывает sticky')
+      await close.waitFor({ state: 'hidden', timeout: 3000 }).catch(() => note(profile, 'крестик не скрывает sticky'))
     }
   } catch (e) {
     note(profile, 'sticky: ' + e.message.split('\n')[0])
