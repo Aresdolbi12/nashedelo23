@@ -23,21 +23,21 @@ const MAP = {
   'Беляева.jpg': ['belyaeva', { left: 165, top: 0, width: 800, height: 1000 }],
 }
 
-/* Квадратные кадры для попапа лекции (2026-07-25): в модалке фото
-   показывается квадратом, и обрезка 4:5-кадра давала разную крупность —
-   кто-то «далеко», у кого-то макушка в упор к верхней кромке.
-   Кадры считаны по контрольному листу с сеткой: над макушкой ~13% высоты
-   кадра воздуха, голова (макушка→подбородок) ~52% кадра, лицо по центру. */
-const SQUARE = {
+/* Кадры для попапа лекции (2026-07-25). Сначала были квадратные, но в
+   квадрате портреты сидят тесно — окно сделали вертикальным (4:5, как сами
+   снимки), кадры пересчитаны свободнее: над макушкой ~11% высоты кадра
+   воздуха, голова (макушка→подбородок) ~44% кадра, лицо по центру.
+   Замеры — по контрольному листу с сеткой (см. историю в памяти проекта). */
+const PORTRAIT = {
   /* Нагорной и Гертель кадр шире расчётного: пышная причёска выше «макушки» */
-  'Нагорная.jpg': ['nagornaya', { left: 174, top: 208, width: 700, height: 700 }],
-  'Шаповалова Л.В..jpg': ['shapovalova', { left: 47, top: 0, width: 639, height: 639 }],
-  'Жабин В.В..jpg': ['zhabin', { left: 2, top: 0, width: 1290, height: 1290 }],
-  'Гаврилов.jpg': ['gavrilov', { left: 469, top: 446, width: 277, height: 277 }],
-  'Гертель.jpg': ['gertel', { left: 298, top: 50, width: 370, height: 370 }],
-  'Папета.jpg': ['papeta', { left: 264, top: 179, width: 236, height: 236 }],
-  'Амельченко.jpg': ['amelchenko', { left: 156, top: 16, width: 369, height: 369 }],
-  'Беляева.jpg': ['belyaeva', { left: 269, top: 13, width: 672, height: 672 }],
+  'Нагорная.jpg': ['nagornaya', { left: 192, top: 228, width: 664, height: 830 }],
+  'Шаповалова Л.В..jpg': ['shapovalova', { left: 64, top: 0, width: 606, height: 757 }],
+  'Жабин В.В..jpg': ['zhabin', { left: 175, top: 0, width: 1034, height: 1292 }],
+  'Гаврилов.jpg': ['gavrilov', { left: 476, top: 444, width: 262, height: 327 }],
+  'Гертель.jpg': ['gertel', { left: 311, top: 67, width: 344, height: 430 }],
+  'Папета.jpg': ['papeta', { left: 270, top: 178, width: 224, height: 280 }],
+  'Амельченко.jpg': ['amelchenko', { left: 165, top: 16, width: 349, height: 436 }],
+  'Беляева.jpg': ['belyaeva', { left: 287, top: 12, width: 636, height: 795 }],
 }
 
 for (const dir of ['public/speakers', 'public-regru/speakers']) mkdirSync(resolve(root, dir), { recursive: true })
@@ -55,16 +55,16 @@ for (const [file, [slug, box]] of Object.entries(MAP)) {
   console.log(`${slug}.webp ${(size / 1024).toFixed(0)}KB`)
 }
 
-for (const [file, [slug, box]] of Object.entries(SQUARE)) {
-  const out = resolve(root, 'public/speakers', slug + '-sq.webp')
+for (const [file, [slug, box]] of Object.entries(PORTRAIT)) {
+  const out = resolve(root, 'public/speakers', slug + '-p.webp')
   await sharp(resolve(src, file))
     .rotate()
     .extract(box)
-    .resize(400, 400)
+    .resize(400, 500)
     .webp({ quality: 84 })
     .toFile(out)
-  copyFileSync(out, resolve(root, 'public-regru/speakers', slug + '-sq.webp'))
+  copyFileSync(out, resolve(root, 'public-regru/speakers', slug + '-p.webp'))
   const size = (await sharp(out).toBuffer()).length
-  console.log(`${slug}-sq.webp ${(size / 1024).toFixed(0)}KB`)
+  console.log(`${slug}-p.webp ${(size / 1024).toFixed(0)}KB`)
 }
 console.log('OK')

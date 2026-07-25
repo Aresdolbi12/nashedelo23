@@ -67,15 +67,15 @@ function LectureModal({ lecture, onClose }) {
           {/* Фото спикера (2026-07-24); силуэт — если фото ещё нет */}
           {SPEAKER_PHOTOS[lecture.speaker] ? (
             <img
-              /* -sq: отдельный квадратный кадр (см. scripts/gen-speakers.mjs) —
-                 крупность лиц выровнена, макушка не липнет к кромке */
-              src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}-sq.webp`}
+              /* -p: отдельный вертикальный кадр 4:5 (см. gen-speakers.mjs).
+                 Окно тоже 4:5 — под формат самих снимков, портреты не жмутся */
+              src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}-p.webp`}
               alt={lecture.speaker}
               loading="lazy"
-              className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover flex-shrink-0 border border-[#27251f]/10"
+              className="w-28 sm:w-32 aspect-[4/5] rounded-2xl object-cover flex-shrink-0 border border-[#27251f]/10"
             />
           ) : (
-            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-br from-[#d9bfa8]/60 to-[#623b2a]/25 flex items-center justify-center flex-shrink-0 border border-[#27251f]/10">
+            <div className="w-28 sm:w-32 aspect-[4/5] rounded-2xl bg-gradient-to-br from-[#d9bfa8]/60 to-[#623b2a]/25 flex items-center justify-center flex-shrink-0 border border-[#27251f]/10">
               <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#623b2a" strokeWidth="1.5" aria-hidden="true">
                 <circle cx="12" cy="8" r="4" />
                 <path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
