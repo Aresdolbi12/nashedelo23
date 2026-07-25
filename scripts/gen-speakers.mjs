@@ -23,6 +23,23 @@ const MAP = {
   'Беляева.jpg': ['belyaeva', { left: 165, top: 0, width: 800, height: 1000 }],
 }
 
+/* Квадратные кадры для попапа лекции (2026-07-25): в модалке фото
+   показывается квадратом, и обрезка 4:5-кадра давала разную крупность —
+   кто-то «далеко», у кого-то макушка в упор к верхней кромке.
+   Кадры считаны по контрольному листу с сеткой: над макушкой ~13% высоты
+   кадра воздуха, голова (макушка→подбородок) ~52% кадра, лицо по центру. */
+const SQUARE = {
+  /* Нагорной и Гертель кадр шире расчётного: пышная причёска выше «макушки» */
+  'Нагорная.jpg': ['nagornaya', { left: 174, top: 208, width: 700, height: 700 }],
+  'Шаповалова Л.В..jpg': ['shapovalova', { left: 47, top: 0, width: 639, height: 639 }],
+  'Жабин В.В..jpg': ['zhabin', { left: 2, top: 0, width: 1290, height: 1290 }],
+  'Гаврилов.jpg': ['gavrilov', { left: 469, top: 446, width: 277, height: 277 }],
+  'Гертель.jpg': ['gertel', { left: 298, top: 50, width: 370, height: 370 }],
+  'Папета.jpg': ['papeta', { left: 264, top: 179, width: 236, height: 236 }],
+  'Амельченко.jpg': ['amelchenko', { left: 156, top: 16, width: 369, height: 369 }],
+  'Беляева.jpg': ['belyaeva', { left: 269, top: 13, width: 672, height: 672 }],
+}
+
 for (const dir of ['public/speakers', 'public-regru/speakers']) mkdirSync(resolve(root, dir), { recursive: true })
 
 for (const [file, [slug, box]] of Object.entries(MAP)) {
@@ -36,5 +53,18 @@ for (const [file, [slug, box]] of Object.entries(MAP)) {
   copyFileSync(out, resolve(root, 'public-regru/speakers', slug + '.webp'))
   const size = (await sharp(out).toBuffer()).length
   console.log(`${slug}.webp ${(size / 1024).toFixed(0)}KB`)
+}
+
+for (const [file, [slug, box]] of Object.entries(SQUARE)) {
+  const out = resolve(root, 'public/speakers', slug + '-sq.webp')
+  await sharp(resolve(src, file))
+    .rotate()
+    .extract(box)
+    .resize(400, 400)
+    .webp({ quality: 84 })
+    .toFile(out)
+  copyFileSync(out, resolve(root, 'public-regru/speakers', slug + '-sq.webp'))
+  const size = (await sharp(out).toBuffer()).length
+  console.log(`${slug}-sq.webp ${(size / 1024).toFixed(0)}KB`)
 }
 console.log('OK')

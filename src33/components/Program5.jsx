@@ -67,11 +67,12 @@ function LectureModal({ lecture, onClose }) {
           {/* Фото спикера (2026-07-24); силуэт — если фото ещё нет */}
           {SPEAKER_PHOTOS[lecture.speaker] ? (
             <img
-              src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}.webp?v=3`}
+              /* -sq: отдельный квадратный кадр (см. scripts/gen-speakers.mjs) —
+                 крупность лиц выровнена, макушка не липнет к кромке */
+              src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}-sq.webp`}
               alt={lecture.speaker}
               loading="lazy"
               className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover flex-shrink-0 border border-[#27251f]/10"
-              style={{ objectPosition: '50% 18%' }}
             />
           ) : (
             <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-br from-[#d9bfa8]/60 to-[#623b2a]/25 flex items-center justify-center flex-shrink-0 border border-[#27251f]/10">

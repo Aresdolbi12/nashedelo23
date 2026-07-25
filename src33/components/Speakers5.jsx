@@ -12,7 +12,9 @@ const EASE = [0.19, 1, 0.22, 1]
 export default function Speakers5() {
   return (
     <section id="speakers" className="relative py-24 md:py-32">
-      <div className="max-w-6xl mx-auto px-6 lg:px-10">
+      {/* Шире остальных секций: восемь портретов на десктопе иначе жмутся
+          в узкой колонке, а по краям остаётся много пустого места (24.07) */}
+      <div className="max-w-6xl lg:max-w-[82rem] mx-auto px-6 lg:px-10">
         <motion.h2
           className="relative text-[#f2ece3] font-black text-4xl md:text-6xl mb-12"
           initial={{ opacity: 0, y: 24 }}

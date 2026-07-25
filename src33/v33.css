@@ -503,6 +503,15 @@ button:focus-visible {
   letter-spacing: 0.01em;
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(174, 185, 196, 0.5);
+  /* Гасим контур, когда луч дошёл до конца (2.8с = 1.1 задержка + 1.7 ход).
+     Иначе у «Д» под ножками-выносами остаются призрачные очертания: заливка
+     металлом (background-clip: text) выносные элементы НЕ красит — они вне
+     блока строки, — а обводка их рисует, и получается «кусочек буквы». */
+  animation: outline25-off 0.4s ease 2.8s both;
+}
+@keyframes outline25-off {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 .logo25-clip {
   animation: clip25 1.7s cubic-bezier(0.65, 0, 0.35, 1) 1.1s both;
@@ -533,6 +542,7 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .logo25-clip, .logo25-beam { animation: none; }
   .logo25-clip { clip-path: none; }
+  .logo25-outline { animation: none; opacity: 0; }
 }
 
 
