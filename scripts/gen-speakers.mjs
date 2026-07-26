@@ -23,22 +23,29 @@ const MAP = {
   'Беляева.jpg': ['belyaeva', { left: 165, top: 0, width: 800, height: 1000 }],
 }
 
-/* Кадры для попапа лекции (2026-07-25). Сначала были квадратные, но в
-   квадрате портреты сидят тесно — окно сделали вертикальным (4:5, как сами
-   снимки), кадры пересчитаны свободнее: над макушкой ~11% высоты кадра
-   воздуха, голова (макушка→подбородок) ~44% кадра, лицо по центру.
-   Замеры — по контрольному листу с сеткой (см. историю в памяти проекта). */
-const PORTRAIT = {
-  /* Нагорной и Гертель кадр шире расчётного: пышная причёска выше «макушки» */
-  'Нагорная.jpg': ['nagornaya', { left: 192, top: 228, width: 664, height: 830 }],
-  'Шаповалова Л.В..jpg': ['shapovalova', { left: 64, top: 0, width: 606, height: 757 }],
-  'Жабин В.В..jpg': ['zhabin', { left: 175, top: 0, width: 1034, height: 1292 }],
-  'Гаврилов.jpg': ['gavrilov', { left: 476, top: 444, width: 262, height: 327 }],
-  'Гертель.jpg': ['gertel', { left: 311, top: 67, width: 344, height: 430 }],
-  'Папета.jpg': ['papeta', { left: 270, top: 178, width: 224, height: 280 }],
-  'Амельченко.jpg': ['amelchenko', { left: 165, top: 16, width: 349, height: 436 }],
-  'Беляева.jpg': ['belyaeva', { left: 287, top: 12, width: 636, height: 795 }],
+/* Кадры для попапа лекции (2026-07-26, ревизия 3). Раньше мерил на глаз —
+   лица уезжали влево-вправо и крупность гуляла. Теперь кадр СЧИТАЕТСЯ от
+   рамки лица, найденной детектором (scripts/face-boxes.py, Haar OpenCV):
+     [x, y, size] рамки — лоб→подбородок, size = её сторона.
+   Кадр 4:5: высота = FRAME_H × size, лицо по центру по горизонтали,
+   над рамкой лица = ABOVE × size (причёска + воздух).
+   Если кадр вылезает за край — подкладываем края (extendWith: copy), иначе
+   пришлось бы жать кадр и ломать единую крупность. */
+const FACES = {
+  'Нагорная.jpg': ['nagornaya', { x: 395, y: 503, size: 324 }],
+  'Шаповалова Л.В..jpg': ['shapovalova', { x: 282, y: 202, size: 324 }],
+  'Жабин В.В..jpg': ['zhabin', { x: 308, y: 463, size: 555 }],
+  'Гаврилов.jpg': ['gavrilov', { x: 461, y: 506, size: 215 }],
+  /* у Гертель детектор крупнее всего оценил микрофон с рукой — рамка её
+     настоящего лица выбрана вручную из списка кандидатов (проверено глазами) */
+  'Гертель.jpg': ['gertel', { x: 434, y: 117, size: 193 }],
+  'Папета.jpg': ['papeta', { x: 319, y: 177, size: 133 }],
+  'Амельченко.jpg': ['amelchenko', { x: 225, y: 87, size: 197 }],
+  'Беляева.jpg': ['belyaeva', { x: 432, y: 156, size: 287 }],
 }
+const FRAME_H = 3.3   // высота кадра в размерах рамки лица
+const ABOVE = 0.95    // сколько оставить над рамкой лица (причёска + воздух)
+const MAX_PAD = 0.15  // максимум подложенного края (доля от стороны кадра)
 
 for (const dir of ['public/speakers', 'public-regru/speakers']) mkdirSync(resolve(root, dir), { recursive: true })
 
@@ -55,16 +62,38 @@ for (const [file, [slug, box]] of Object.entries(MAP)) {
   console.log(`${slug}.webp ${(size / 1024).toFixed(0)}KB`)
 }
 
-for (const [file, [slug, box]] of Object.entries(PORTRAIT)) {
+for (const [file, [slug, face]] of Object.entries(FACES)) {
   const out = resolve(root, 'public/speakers', slug + '-p.webp')
-  await sharp(resolve(src, file))
-    .rotate()
-    .extract(box)
-    .resize(400, 500)
+  const meta = await sharp(resolve(src, file)).rotate().metadata()
+
+  /* Кадр урезаем, если под него пришлось бы подкладывать больше MAX_PAD:
+     у Жабина исходник — тесный «паспортный» квадрат, и без этого снизу
+     размазывало бы четверть кадра. */
+  const fit = (meta.height - face.y + ABOVE * face.size) / (1 - MAX_PAD)
+  const h = Math.round(Math.min(FRAME_H * face.size, fit))
+  const w = Math.round(h * 0.8)
+  const top = Math.round(face.y - ABOVE * face.size)
+  const left = Math.round(face.x + face.size / 2 - w / 2)
+
+  const pad = {
+    top: Math.max(0, -top),
+    left: Math.max(0, -left),
+    bottom: Math.max(0, top + h - meta.height),
+    right: Math.max(0, left + w - meta.width),
+  }
+  let img = sharp(resolve(src, file)).rotate()
+  if (pad.top || pad.left || pad.bottom || pad.right) {
+    img = sharp(await img.extend({ ...pad, extendWith: 'copy' }).toBuffer())
+  }
+  await img
+    .extract({ left: left + pad.left, top: top + pad.top, width: w, height: h })
+    .resize(480, 600)
     .webp({ quality: 84 })
     .toFile(out)
+
   copyFileSync(out, resolve(root, 'public-regru/speakers', slug + '-p.webp'))
   const size = (await sharp(out).toBuffer()).length
-  console.log(`${slug}-p.webp ${(size / 1024).toFixed(0)}KB`)
+  const padded = Object.entries(pad).filter(([, v]) => v > 0).map(([k, v]) => `${k}+${v}`).join(' ')
+  console.log(`${slug}-p.webp ${w}x${h} ${(size / 1024).toFixed(0)}KB${padded ? '  (подложено: ' + padded + ')' : ''}`)
 }
 console.log('OK')

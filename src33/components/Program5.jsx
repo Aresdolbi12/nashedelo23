@@ -42,7 +42,7 @@ function LectureModal({ lecture, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label={lecture.title}
-        className="panel relative w-full max-w-2xl max-h-[85vh] overflow-y-auto p-7 md:p-10"
+        className="panel relative w-full max-w-3xl max-h-[85vh] overflow-y-auto p-7 md:p-10"
         initial={{ opacity: 0, y: 32, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 24, scale: 0.97 }}
@@ -72,10 +72,10 @@ function LectureModal({ lecture, onClose }) {
               src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}-p.webp`}
               alt={lecture.speaker}
               loading="lazy"
-              className="w-28 sm:w-32 aspect-[4/5] rounded-2xl object-cover flex-shrink-0 border border-[#27251f]/10"
+              className="w-36 sm:w-44 aspect-[4/5] rounded-2xl object-cover flex-shrink-0 border border-[#27251f]/10"
             />
           ) : (
-            <div className="w-28 sm:w-32 aspect-[4/5] rounded-2xl bg-gradient-to-br from-[#d9bfa8]/60 to-[#623b2a]/25 flex items-center justify-center flex-shrink-0 border border-[#27251f]/10">
+            <div className="w-36 sm:w-44 aspect-[4/5] rounded-2xl bg-gradient-to-br from-[#d9bfa8]/60 to-[#623b2a]/25 flex items-center justify-center flex-shrink-0 border border-[#27251f]/10">
               <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#623b2a" strokeWidth="1.5" aria-hidden="true">
                 <circle cx="12" cy="8" r="4" />
                 <path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
