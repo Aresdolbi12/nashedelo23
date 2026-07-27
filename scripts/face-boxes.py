@@ -12,14 +12,15 @@ import numpy as np
 
 SRC = pathlib.Path(r"C:\Users\vlad\Documents\nashedelo23\Фото спикеров")
 FILES = {
+    "Елена Алексеевна Пистунова.png": "pistunova",
+    "Инна Леонидовна Беляева.png": "belyaeva",
     "Нагорная.jpg": "nagornaya",
     "Шаповалова Л.В..jpg": "shapovalova",
     "Жабин В.В..jpg": "zhabin",
     "Гаврилов.jpg": "gavrilov",
-    "Папета.jpg": "papeta",
-    "Гертель.jpg": "gertel",
+    "Татьяна Николаевна Папета.png": "papeta",
+    "Евгения Андреевна Гертель.png": "gertel",
     "Амельченко.jpg": "amelchenko",
-    "Беляева.jpg": "belyaeva",
 }
 
 cascades = [

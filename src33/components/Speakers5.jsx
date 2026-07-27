@@ -13,9 +13,10 @@ const EASE = [0.19, 1, 0.22, 1]
 export default function Speakers5() {
   return (
     <section id="speakers" className="relative py-24 md:py-32">
-      {/* Шире остальных секций: восемь портретов на десктопе иначе жмутся
-          в узкой колонке, а по краям остаётся много пустого места (24.07) */}
-      <div className="max-w-6xl lg:max-w-[82rem] mx-auto px-6 lg:px-10">
+      {/* Спикеров стало 9 → сетка 3×3 (просьба заказчика 27.07), а колонка
+          сузилась до 5xl: при трёх картах на широкой полосе портреты
+          раздувались бы вдвое против прежних. Размер карточки прежний. */}
+      <div className="max-w-5xl mx-auto px-6 lg:px-10">
         <motion.h2
           className="relative text-[#f2ece3] font-black text-4xl md:text-6xl mb-12"
           initial={{ opacity: 0, y: 24 }}
@@ -29,10 +30,10 @@ export default function Speakers5() {
           <span className="relative">Спикеры</span>
         </motion.h2>
 
-        {/* 8 спикеров: 2 колонки на телефоне, 4 на десктопе — ровно 2 ряда.
+        {/* 9 спикеров: 2 колонки на телефоне, 3 дальше — ровно три ряда.
             Пропорция карточки = пропорции фото (4:5): снимок целиком, чистый,
             без плашек — ФИО и тема подписью ПОД карточкой (правка 24.07) */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-7 md:gap-x-5 md:gap-y-9">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-7 md:gap-x-5 md:gap-y-9">
           {SPEAKERS.map(({ name, topic, photo, tbd }, i) => (
             <motion.div
               key={name}
@@ -45,7 +46,7 @@ export default function Speakers5() {
               <div className="speaker-card3 aspect-[4/5] relative overflow-hidden">
                 {photo ? (
                   <img
-                    src={`../speakers/${photo}.webp?v=4`}
+                    src={`../speakers/${photo}.webp?v=5`}
                     alt={name}
                     loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"

@@ -4,7 +4,7 @@
 import { webkit } from 'playwright'
 import { writeFileSync } from 'node:fs'
 
-const slugs = ['nagornaya', 'shapovalova', 'zhabin', 'gavrilov', 'gertel', 'papeta', 'amelchenko', 'belyaeva']
+const slugs = ['pistunova', 'belyaeva', 'nagornaya', 'shapovalova', 'zhabin', 'gavrilov', 'papeta', 'gertel', 'amelchenko']
 const cells = slugs.map((s) => `
   <div><div class="c">
     <img src="../public/speakers/${s}.webp">
@@ -12,7 +12,7 @@ const cells = slugs.map((s) => `
   </div><span>${s}</span></div>`).join('')
 
 const html = `<!doctype html><meta charset=utf-8><style>
- body{margin:0;background:#0d2f22;font:11px system-ui;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:14px}
+ body{margin:0;background:#0d2f22;font:11px system-ui;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:14px}
  .c{position:relative}
  .c img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px}
  .v{position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(0,255,255,.8)}
