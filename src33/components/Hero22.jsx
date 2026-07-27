@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { ArrowIcon } from './shared33.jsx'
-import { SCHEDULE } from '../content.js'
+import { SCHEDULE, REGISTER_URL } from '../content.js'
 import Logo15 from './Logo15.jsx'
 import LogoFx25 from './LogoFx25.jsx'
 import Star22 from './Star22.jsx'
@@ -126,8 +126,14 @@ export default function Hero22({ starDraw = false }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE, delay: 1.3 }}
           >
-            <a href="#register" className="btn-light inline-flex items-center gap-3 px-8 py-4 font-bold">
-              Записаться
+            {/* Все кнопки записи ведут прямо на форму заказчика (правка 27.07) */}
+            <a
+              href={REGISTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-light inline-flex items-center gap-3 px-8 py-4 font-bold"
+            >
+              Зарегистрироваться
               <ArrowIcon size={18} />
             </a>
             <a href="#about" className="btn-ghost3 px-8 py-4 font-semibold">

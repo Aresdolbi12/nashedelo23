@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Logo15 from './Logo15.jsx'
+import { REGISTER_URL } from '../content.js'
 
 const EASE = [0.19, 1, 0.22, 1]
 
@@ -64,8 +65,11 @@ export default function Nav5() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Ведёт сразу на форму заказчика — как все кнопки записи (27.07) */}
             <a
-              href="#register"
+              href={REGISTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden md:inline-flex btn-light px-5 py-2.5 text-sm font-bold"
             >
               Регистрация
@@ -119,14 +123,16 @@ export default function Nav5() {
               </motion.a>
             ))}
             <motion.a
-              href="#register"
+              href={REGISTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-light px-8 py-4 font-bold mt-4"
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.45, ease: EASE }}
               onClick={() => setMenuOpen(false)}
             >
-              Регистрация
+              Зарегистрироваться
             </motion.a>
           </motion.div>
         )}

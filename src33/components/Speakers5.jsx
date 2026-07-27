@@ -5,8 +5,9 @@ const EASE = [0.19, 1, 0.22, 1]
 
 /* Спикеры сеткой (конструкция «Мой Бизнес Forum»: spk-grid).
    С 2026-07-22 — реальные ФИО из программы (content.js), не заглушки.
-   С 2026-07-24 — реальные фото: webp 4:5 в /speakers, кадры выровнены по
-   уровню глаз (~30%). Карточки ТОЖЕ 4:5 — портрет показывается целиком,
+   С 2026-07-24 — реальные фото: webp 4:5 в /speakers. С 27.07 кадры не
+   ручные, а считаются от рамки лица (детектор, см. gen-speakers.mjs): лицо
+   по центру, глаза на 35% высоты. Карточки ТОЖЕ 4:5 — портрет целиком,
    без обрезки в горизонтальную плитку (обрезка давала «лбы и макушки»);
    текст читается через зелёный градиент снизу. */
 export default function Speakers5() {
@@ -44,7 +45,7 @@ export default function Speakers5() {
               <div className="speaker-card3 aspect-[4/5] relative overflow-hidden">
                 {photo ? (
                   <img
-                    src={`../speakers/${photo}.webp?v=3`}
+                    src={`../speakers/${photo}.webp?v=4`}
                     alt={name}
                     loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"

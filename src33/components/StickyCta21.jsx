@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { REGISTER_URL } from '../content.js'
 
 const EASE = [0.23, 1, 0.32, 1]
 
-/* Плавающая CTA v31: только оранжевая кнопка «Записаться бесплатно»
+/* Плавающая CTA v31: только оранжевая кнопка «Зарегистрироваться»
    с компактным крестиком в углу (контроль пользователя сохранён).
-   Появляется после первого экрана, прячется у секции регистрации. */
+   Появляется после первого экрана, прячется у секции регистрации.
+   С 27.07 ведёт сразу на форму заказчика, как и остальные кнопки записи. */
 export default function StickyCta21() {
   const [dismissed, setDismissed] = useState(false)
   const [pastHero, setPastHero] = useState(false)
@@ -44,10 +46,12 @@ export default function StickyCta21() {
         >
           <div className="relative">
             <a
-              href="#register"
+              href={REGISTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-ink inline-block px-6 py-3.5 text-sm md:text-base font-bold whitespace-nowrap shadow-2xl"
             >
-              Записаться бесплатно
+              Зарегистрироваться
             </a>
             {/* Тап-зона 44px (норма), видимый круг прежний 28px — центр совпадает */}
             <button
