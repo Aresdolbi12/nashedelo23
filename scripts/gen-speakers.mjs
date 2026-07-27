@@ -34,8 +34,8 @@ const FACES = {
      maxPad — сколько края разрешено подложить (доля стороны кадра).
    Лицо всегда по центру кадра по горизонтали. Уровень глаз ≈ (above+0.4)/frameH.
    Карточка — план шире (поясной), попап — крупнее (погрудный). */
-const CARD = { frameH: 3.6, above: 0.85, maxPad: 0.12, w: 800, h: 1000, suffix: '', q: 82 }
-const POPUP = { frameH: 3.3, above: 0.95, maxPad: 0.15, w: 480, h: 600, suffix: '-p', q: 84 }
+const CARD = { frameH: 3.6, above: 0.85, maxTop: 0.18, w: 800, h: 1000, suffix: '', q: 82 }
+const POPUP = { frameH: 3.3, above: 0.95, maxTop: 0.18, w: 480, h: 600, suffix: '-p', q: 84 }
 
 for (const dir of ['public/speakers', 'public-regru/speakers']) mkdirSync(resolve(root, dir), { recursive: true })
 
@@ -44,31 +44,26 @@ async function crop(file, slug, face, cfg) {
   const meta = await sharp(resolve(src, file)).rotate().metadata()
   const cx = face.x + face.size / 2
 
-  /* Верх кадра задан рамкой лица и above — двигать его нельзя, иначе поедет
-     уровень глаз. Поэтому подгоняем ВЫСОТУ: у тесных исходников (Жабин —
-     почти «паспортный» квадрат) кадр урезается, чтобы снизу не размазывало
-     подложенным краем больше maxPad. */
-  const top = Math.round(face.y - cfg.above * face.size)
-  let h = Math.min(cfg.frameH * face.size, (meta.height - top) / (1 - cfg.maxPad))
-  let w = h * 0.8
-  const padH = () => Math.max(0, w / 2 - cx) + Math.max(0, cx + w / 2 - meta.width)
-  while (padH() > cfg.maxPad * w && h > 1) { h -= 2; w = h * 0.8 }  // то же по ширине
-  h = Math.round(h)
-  w = Math.round(h * 0.8)
-  const left = Math.round(cx - w / 2)
+  /* СНИЗУ И ПО БОКАМ КРАЙ НЕ ПОДКЛАДЫВАЕМ (правка 27.07): там одежда и руки,
+     копия крайнего пикселя даёт «растяжку» — заказчик поймал её у Жабина и
+     Пистуновой. Кадр обязан помещаться в исходник, поэтому при нехватке места
+     режем ВЫСОТУ (у Жабина исходник почти «паспортный» квадрат — план выходит
+     крупнее прочих, это честнее размазанного низа).
+     Сверху подложить можно: там ровный фон, шва не видно. */
+  let top = Math.round(face.y - cfg.above * face.size)
+  // слишком много подложки сверху — опускаем кадр (лицо чуть ниже в кадре)
+  const maxTop = Math.round(cfg.maxTop * cfg.frameH * face.size)
+  if (-top > maxTop) top = -maxTop
+  const hSide = (2 * Math.min(cx, meta.width - cx)) / 0.8   // чтобы не резать бока
+  const h = Math.round(Math.min(cfg.frameH * face.size, meta.height - top, hSide))
+  const w = Math.round(h * 0.8)
+  const left = Math.max(0, Math.min(Math.round(cx - w / 2), meta.width - w))
 
-  const pad = {
-    top: Math.max(0, -top),
-    left: Math.max(0, -left),
-    bottom: Math.max(0, top + h - meta.height),
-    right: Math.max(0, left + w - meta.width),
-  }
+  const pad = { top: Math.max(0, -top), left: 0, bottom: 0, right: 0 }
   let img = sharp(resolve(src, file)).rotate()
-  if (pad.top || pad.left || pad.bottom || pad.right) {
-    img = sharp(await img.extend({ ...pad, extendWith: 'copy' }).toBuffer())
-  }
+  if (pad.top) img = sharp(await img.extend({ ...pad, extendWith: 'copy' }).toBuffer())
   await img
-    .extract({ left: left + pad.left, top: top + pad.top, width: w, height: h })
+    .extract({ left, top: top + pad.top, width: w, height: h })
     .resize(cfg.w, cfg.h)
     .webp({ quality: cfg.q })
     .toFile(out)
