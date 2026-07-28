@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <!-- CSP метатегом (28.07): .htaccess на reg.ru не работает — статику отдаёт
+         nginx мимо Apache, проверено заливкой пробного файла. Метатег умеет всё,
+         кроме frame-ancestors (его браузеры читают только из заголовка) —
+         поэтому от встраивания в чужой iframe по-прежнему защищает скрипт ниже.
+         'unsafe-inline' вынужденно: singlefile-сборка кладёт весь JS и CSS в HTML.
+         Своих полей ввода нет (анкета на Яндекс.Формах) → form-action 'none'. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru https://*.yandex.ru; font-src 'self'; connect-src 'self' https://mc.yandex.ru https://*.yandex.ru wss://mc.yandex.ru; frame-src https://mc.yandex.ru https://*.yandex.ru; base-uri 'self'; form-action 'none'; object-src 'none'"
+    />
     <script>
       /* Защита от встраивания в чужой iframe (фишинг-оверлеи):
          reg.ru отдаёт статику через nginx мимо .htaccess, заголовок

@@ -7,12 +7,21 @@ RewriteRule ^ https://xn--23-6kcqeb6blo9g.xn--p1ai%{REQUEST_URI} [L,R=301]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteRule ^ https://xn--23-6kcqeb6blo9g.xn--p1ai%{REQUEST_URI} [L,R=301]
 
-# Заголовки безопасности (сайт нельзя встроить в чужой iframe и т.д.)
+# Заголовки безопасности (сайт нельзя встроить в чужой iframe и т.д.).
+# 28.07.2026: файл лежал в сборке с 22.07, но на сервер его ни разу не залили —
+# заголовков на проде не было. Проверка после деплоя:
+#   curl -sSI https://xn--23-6kcqeb6blo9g.xn--p1ai/
+# HSTS тут НЕ ставим: его уже отдаёт nginx, второй такой же заголовок лишний.
 <IfModule mod_headers.c>
-    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Frame-Options "DENY"
     Header always set X-Content-Type-Options "nosniff"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    # Своих полей ввода на сайте нет (анкета — на Яндекс.Формах), поэтому
+    # form-action 'none'. Инлайн разрешён вынужденно: singlefile-сборка кладёт
+    # весь JS и CSS прямо в HTML. frame-ancestors работает только заголовком —
+    # в <meta> браузеры его игнорируют, поэтому запрет фрейма именно здесь.
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru https://*.yandex.ru; font-src 'self'; connect-src 'self' https://mc.yandex.ru https://*.yandex.ru wss://mc.yandex.ru; frame-src https://mc.yandex.ru https://*.yandex.ru; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'"
 </IfModule>
 
 # Кеширование: html перечитывается, статика живёт долго
