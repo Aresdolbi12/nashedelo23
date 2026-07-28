@@ -98,11 +98,15 @@
       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
+      /* Вебвизор (запись сессий) ОТКЛЮЧЁН 28.07: заказчику записи не нужны, а
+         по 152-ФЗ это уже не «обезличенная статистика» — пришлось бы описывать
+         запись сессий в политике и спрашивать согласие до старта счётчика.
+         Оставлены только счётчик посещаемости, карта кликов и внешние ссылки. */
       ym(110942954, "init", {
         clickmap: true,
         trackLinks: true,
         accurateTrackBounce: true,
-        webvisor: true
+        webvisor: false
       });
     </script>
     <!-- /Yandex.Metrika counter (noscript-пиксель — в начале body: div в head невалиден) -->

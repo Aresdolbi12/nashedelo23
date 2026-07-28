@@ -56,6 +56,14 @@ for (const marker of mustHave) {
 if (/<div id="root"><\/div>/.test(dom)) throw new Error('Пререндер пуст: #root без контента — index.html не тронут')
 if (/id="boot"/.test(dom)) throw new Error('В пререндере остался #boot (закрыл бы страницу) — index.html не тронут')
 
+/* Метрика во время пререндера успевает вставить свои <script> в <head> — они
+   запекаются в статику и грузятся у посетителей в обход нашей конфигурации
+   (так на проде жил tag_phono.js от вебвизора даже после его отключения).
+   Вырезаем: инлайн-загрузчик в 33/index.html вставит нужное сам. */
+const before = dom.length
+dom = dom.replace(/<script[^>]*mc\.yandex\.ru\/metrika\/[^>]*><\/script>/g, '')
+if (dom.length !== before) console.log('  вырезаны запечённые скрипты Метрики')
+
 if (!/^<!DOCTYPE html>/i.test(dom.trimStart())) dom = '<!doctype html>\n' + dom
 
 writeFileSync(built, dom, 'utf8')
