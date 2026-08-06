@@ -69,7 +69,8 @@ function LectureModal({ lecture, onClose }) {
             <img
               /* -p: отдельный вертикальный кадр 4:5 (см. gen-speakers.mjs).
                  Окно тоже 4:5 — под формат самих снимков, портреты не жмутся */
-              src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}-p.webp`}
+              /* ?v — сброс кэша при перевыпуске снимков (статика живёт долго) */
+              src={`../speakers/${SPEAKER_PHOTOS[lecture.speaker]}-p.webp?v=7`}
               alt={lecture.speaker}
               loading="lazy"
               className="w-36 sm:w-44 aspect-[4/5] rounded-2xl object-cover flex-shrink-0 border border-[#27251f]/10"

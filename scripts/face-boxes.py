@@ -16,10 +16,10 @@ FILES = {
     "Инна Леонидовна Беляева.png": "belyaeva",
     "Нагорная.jpg": "nagornaya",
     "Шаповалова Л.В..jpg": "shapovalova",
-    "Жабин В.В..jpg": "zhabin",
+    "Жабин.jpeg": "zhabin",
     "Гаврилов.jpg": "gavrilov",
     "Татьяна Николаевна Папета.png": "papeta",
-    "Евгения Андреевна Гертель.png": "gertel",
+    "Гертель Е.А..jpg": "gertel",
     "Амельченко.jpg": "amelchenko",
 }
 
